@@ -9,6 +9,7 @@ import android.widget.Toast
 import com.duc1607.bb10dialer.CallActivity
 import com.duc1607.bb10dialer.R
 import com.duc1607.bb10dialer.data.PhoneSettingsStore
+import com.duc1607.bb10dialer.data.canRecordCalls
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -102,7 +103,7 @@ class CallService : InCallService() {
     }
 
     private fun startRecording(call: LiveCall) {
-        if (call.emergency || !PhoneSettingsStore.get(this).canRecordCalls) return
+        if (call.emergency || !PhoneSettingsStore.get(this).canRecordCalls(this)) return
         if (recorder.start(call.number)) {
             recording = true
             CallCenter.recordingChanged(true)
@@ -138,7 +139,7 @@ class CallService : InCallService() {
     private fun autoRecord(call: LiveCall?) {
         if (call == null || call.phase != CallPhase.Active || recording) return
         val settings = PhoneSettingsStore.get(this)
-        if (settings.autoRecord && settings.canRecordCalls && autoRecorded.add(call.id)) startRecording(call)
+        if (settings.autoRecord && settings.canRecordCalls(this) && autoRecorded.add(call.id)) startRecording(call)
     }
 
     private fun followRinging(state: CallCenterState) {

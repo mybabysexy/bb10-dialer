@@ -96,11 +96,13 @@ class AdvancedSettingsTest {
     }
 
     @Test
-    fun `recording takes both the setting and root`() {
-        assertFalse(PhoneSettings().canRecordCalls)
-        assertFalse(PhoneSettings(callRecording = true).canRecordCalls)
-        assertFalse(PhoneSettings(rootGranted = true).canRecordCalls)
-        assertTrue(PhoneSettings(callRecording = true, rootGranted = true).canRecordCalls)
+    fun `recording takes the setting, and root or the phone line`() {
+        assertFalse(PhoneSettings().canRecordCalls(hasLine = false))
+        assertFalse(PhoneSettings().canRecordCalls(hasLine = true))
+        assertFalse(PhoneSettings(callRecording = true).canRecordCalls(hasLine = false))
+        assertFalse(PhoneSettings(rootGranted = true).canRecordCalls(hasLine = true))
+        assertTrue(PhoneSettings(callRecording = true, rootGranted = true).canRecordCalls(hasLine = false))
+        assertTrue(PhoneSettings(callRecording = true).canRecordCalls(hasLine = true))
     }
 
     @Test

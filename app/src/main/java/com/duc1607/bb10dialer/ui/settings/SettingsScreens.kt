@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.PowerManager
@@ -61,7 +60,6 @@ import com.duc1607.bb10dialer.R
 import com.duc1607.bb10dialer.data.CallSummary
 import com.duc1607.bb10dialer.data.DialerRepository
 import com.duc1607.bb10dialer.data.LED_COLORS
-import com.duc1607.bb10dialer.data.LINE_CAPTURE_PERMISSION
 import com.duc1607.bb10dialer.data.LineRecordingModule
 import com.duc1607.bb10dialer.data.ModuleState
 import com.duc1607.bb10dialer.data.PhoneModel
@@ -73,6 +71,8 @@ import com.duc1607.bb10dialer.data.RootStatus
 import com.duc1607.bb10dialer.data.SimLine
 import com.duc1607.bb10dialer.data.ThemeMode
 import com.duc1607.bb10dialer.data.blacklistEntry
+import com.duc1607.bb10dialer.data.canRecordCalls
+import com.duc1607.bb10dialer.data.hasLinePermission
 import com.duc1607.bb10dialer.data.ringtoneFor
 import com.duc1607.bb10dialer.ui.Route
 import com.duc1607.bb10dialer.ui.calls.IconAction
@@ -517,13 +517,17 @@ private fun AdvancedPage(settings: PhoneSettings, change: ((PhoneSettings) -> Ph
 }
 
 /**
- * Recording takes root, so the switches stay off without it. The status comes from the last time
+ * Recording takes root or the phone line, so the switches stay off without either. Root and the module
+ * are a way to get the line: an app that has it needs neither. The status comes from the last time
  * `su` was asked: asking unprompted would bring up its prompt.
  */
 @Composable
 private fun RecordingPage(settings: PhoneSettings, change: ((PhoneSettings) -> PhoneSettings) -> Unit, onBack: () -> Unit) {
     val d = Bb10.dimens
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val hasLine = remember { hasLinePermission(context) }
+    val canRecord = settings.canRecordCalls(hasLine)
     var status by remember { mutableStateOf(if (settings.rootGranted) RootStatus.Granted else null) }
     var asking by remember { mutableStateOf(false) }
     suspend fun ask() {
@@ -537,35 +541,40 @@ private fun RecordingPage(settings: PhoneSettings, change: ((PhoneSettings) -> P
     LaunchedEffect(Unit) { if (settings.rootGranted) ask() }
     SettingsPage(stringResource(R.string.advanced_recording), onBack) {
         Bb10Toggle(
-            settings.canRecordCalls,
+            canRecord,
             { on -> change { it.copy(callRecording = on) } },
             label = stringResource(R.string.advanced_recording_toggle),
-            enabled = settings.rootGranted,
+            enabled = settings.rootGranted || hasLine,
         )
         Bb10Divider()
         Bb10Toggle(
-            settings.canRecordCalls && settings.autoRecord,
+            canRecord && settings.autoRecord,
             { on -> change { it.copy(autoRecord = on) } },
             label = stringResource(R.string.recording_auto),
-            enabled = settings.canRecordCalls,
+            enabled = canRecord,
         )
         Bb10Divider()
-        SettingNote(
-            stringResource(
-                when (status) {
-                    RootStatus.Granted -> R.string.root_granted
-                    RootStatus.Refused -> R.string.root_refused
-                    RootStatus.Missing -> R.string.root_missing
-                    null -> R.string.root_unknown
-                },
-            ),
-        )
-        if (status != RootStatus.Granted) {
-            Box(Modifier.fillMaxWidth().padding(horizontal = d.spaceM).padding(bottom = d.spaceM)) {
-                Bb10Button(stringResource(R.string.root_request), { scope.launch { ask() } }, enabled = !asking)
-            }
+        if (hasLine) {
+            // Who installed the module with root can still take it out here. A ROM has no such thing.
+            if (settings.rootGranted) LineRecordingModuleRows(hasLine) else SettingNote(stringResource(R.string.line_active))
         } else {
-            LineRecordingModuleRows()
+            SettingNote(
+                stringResource(
+                    when (status) {
+                        RootStatus.Granted -> R.string.root_granted
+                        RootStatus.Refused -> R.string.root_refused
+                        RootStatus.Missing -> R.string.root_missing
+                        null -> R.string.root_unknown
+                    },
+                ),
+            )
+            if (status != RootStatus.Granted) {
+                Box(Modifier.fillMaxWidth().padding(horizontal = d.spaceM).padding(bottom = d.spaceM)) {
+                    Bb10Button(stringResource(R.string.root_request), { scope.launch { ask() } }, enabled = !asking)
+                }
+            } else {
+                LineRecordingModuleRows(hasLine)
+            }
         }
         Bb10Divider()
     }
@@ -573,7 +582,7 @@ private fun RecordingPage(settings: PhoneSettings, change: ((PhoneSettings) -> P
 
 /** Once `su` works. The state is read as root too, which brings up no prompt by then. */
 @Composable
-private fun LineRecordingModuleRows() {
+private fun LineRecordingModuleRows(hasLine: Boolean) {
     val context = LocalContext.current
     val d = Bb10.dimens
     val scope = rememberCoroutineScope()
@@ -581,7 +590,6 @@ private fun LineRecordingModuleRows() {
     var failed by remember { mutableStateOf(false) }
     var busy by remember { mutableStateOf(false) }
     var askRestart by remember { mutableStateOf(false) }
-    val hasLine = remember { context.checkSelfPermission(LINE_CAPTURE_PERMISSION) == PackageManager.PERMISSION_GRANTED }
     LaunchedEffect(Unit) { state = withContext(Dispatchers.IO) { LineRecordingModule.state() } }
     fun act(job: () -> Boolean, onDone: () -> Unit = {}) {
         busy = true
@@ -597,14 +605,14 @@ private fun LineRecordingModuleRows() {
     val current = state ?: return
     val note = when {
         failed -> R.string.line_failed
-        current == ModuleState.Unsupported -> R.string.line_unsupported
         current == ModuleState.Removing -> R.string.line_removing
-        current == ModuleState.Installed && hasLine -> R.string.line_active
+        hasLine -> R.string.line_active
+        current == ModuleState.Unsupported -> R.string.line_unsupported
         current == ModuleState.Installed -> R.string.line_restart
         else -> R.string.line_missing
     }
     SettingNote(stringResource(note))
-    if (current == ModuleState.Missing || current == ModuleState.Installed) {
+    if ((current == ModuleState.Missing && !hasLine) || current == ModuleState.Installed) {
         Box(Modifier.fillMaxWidth().padding(horizontal = d.spaceM).padding(bottom = d.spaceM)) {
             if (current == ModuleState.Missing) {
                 Bb10Button(stringResource(R.string.line_install), { act({ LineRecordingModule.install(context) }, onDone = { askRestart = true }) }, enabled = !busy)

@@ -1,6 +1,7 @@
 package com.duc1607.bb10dialer.data
 
 import android.content.Context
+import android.content.pm.PackageManager
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -33,6 +34,12 @@ enum class ModuleState { Missing, Installed, Removing, Unsupported }
 private const val MODULES_DIR = "/data/adb/modules"
 private const val MODULE_ID = "bb10dialer_privapp"
 const val LINE_CAPTURE_PERMISSION = "android.permission.CAPTURE_AUDIO_OUTPUT"
+
+/** The app may record the phone line: a ROM built it in, or the module below made it a system app. */
+fun hasLinePermission(context: Context): Boolean =
+    context.checkSelfPermission(LINE_CAPTURE_PERMISSION) == PackageManager.PERMISSION_GRANTED
+
+fun PhoneSettings.canRecordCalls(context: Context): Boolean = canRecordCalls(hasLinePermission(context))
 
 /**
  * Only a system app can record the phone line itself. Magisk and KernelSU can make this one look

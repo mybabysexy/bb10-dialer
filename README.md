@@ -49,7 +49,7 @@ Dữ liệu trong ảnh là dữ liệu giả.
 
 ## Ghi âm cuộc gọi
 
-Ghi âm **cần máy đã root** bằng Magisk hoặc KernelSU. Không có root thì tính năng này tắt và màn cuộc gọi không có nút Ghi âm.
+Ghi âm **cần máy đã root** bằng Magisk hoặc KernelSU, hoặc một ROM [tích hợp sẵn ứng dụng](#tích-hợp-vào-rom). Nếu không, tính năng này tắt và màn cuộc gọi không có nút Ghi âm.
 
 Android chỉ cho ứng dụng hệ thống ghi đường thoại, nên ứng dụng cần một module để được coi là ứng dụng hệ thống:
 
@@ -57,7 +57,7 @@ Android chỉ cho ứng dụng hệ thống ghi đường thoại, nên ứng d�
 2. Vào **Cài đặt → Ghi âm cuộc gọi**, bấm **Yêu cầu quyền root** và đồng ý trong trình quản lý root.
 3. Bật **Cho phép ghi âm cuộc gọi**. Muốn tự ghi khi cuộc gọi kết nối thì bật thêm công tắc bên dưới.
 4. Bấm **Ghi đường thoại** để cài module, rồi chọn **Khởi động lại**.
-5. Gọi thử một cuộc, ghi âm rồi nghe lại xem có cả hai đầu không. Không phải máy nào cũng đưa âm thanh ra đường thoại.
+5. Gọi thử một cuộc, ghi âm rồi nghe lại xem có cả hai đầu không. Không phải máy nào cũng đưa âm thanh ra đường thoại; trên Q25 root kèm module đã ghi được.
 
 **Gỡ:** vào cùng trang, bấm **Gỡ ghi đường thoại** rồi khởi động lại máy. Nếu máy kẹt lúc khởi động, hãy khởi động ở safe mode của Magisk để tắt module.
 
@@ -80,6 +80,53 @@ Luật về ghi âm cuộc gọi khác nhau theo nơi bạn sống. Bạn tự c
 
 **Chặn số**
 - Tự nhận diện cuộc gọi rác: hiện chỉ chặn theo danh sách do người dùng nhập.
+
+## Tích hợp vào ROM
+
+Dành cho người làm ROM muốn đưa ứng dụng vào hệ thống, ghi âm cuộc gọi không cần root hay module. Khi ứng dụng đã có quyền ghi đường thoại, trang Ghi âm cuộc gọi tự ẩn phần yêu cầu root và cài module.
+
+Hướng dẫn này chưa được thử trên một ROM thật. Tên cấu hình có thể khác theo phiên bản Android.
+
+**Yêu cầu:** Android 14 (API 34) trở lên, kèm source của bộ giao diện BB10. Ứng dụng dùng giấy phép phi thương mại: ROM bán kèm máy hoặc có thu phí cần xin giấy phép riêng.
+
+**1. Đưa vào ROM.** Build `release`, ký bằng một khóa cố định, tăng `versionCode` theo từng bản, rồi thêm dạng prebuilt và đưa `BB10Phone` vào `PRODUCT_PACKAGES`:
+
+```
+android_app_import {
+    name: "BB10Phone",
+    apk: "app-release.apk",
+    presigned: true,
+    privileged: true,
+    system_ext_specific: true,
+    dex_preopt: { enabled: true },
+    required: ["privapp-permissions-bb10phone"],
+}
+
+prebuilt_etc {
+    name: "privapp-permissions-bb10phone",
+    src: "privapp-permissions-bb10phone.xml",
+    sub_dir: "permissions",
+    system_ext_specific: true,
+}
+```
+
+**2. Cho phép quyền ghi đường thoại.** Quyền này cần ứng dụng nằm trong `priv-app` và có trong danh sách cho phép, không cần ký bằng khóa platform. Nếu máy bật `ro.control_privapp_permissions=enforce` mà thiếu file này, máy có thể không khởi động được.
+
+```xml
+<permissions>
+    <privapp-permissions package="com.duc1607.bb10dialer">
+        <permission name="android.permission.CAPTURE_AUDIO_OUTPUT" />
+    </privapp-permissions>
+</permissions>
+```
+
+**3. Đặt làm ứng dụng gọi mặc định.** Overlay `config_defaultDialer` trong framework thành `com.duc1607.bb10dialer`. Có thể cấp sẵn micro, danh bạ và nhật ký cuộc gọi bằng file `default-permissions`.
+
+**4. Dialer gốc.** Nên giữ lại lúc đầu, vì Telecom dùng nó làm dự phòng khi ứng dụng gọi mặc định gặp lỗi. Muốn bỏ thì overlay `ui_default_package`, `dialer_default_class`, `incall_default_class` của Telecom, trỏ tới `MainActivity` và `.telecom.CallService`, rồi kiểm tra kỹ cuộc gọi khẩn cấp.
+
+**5. Âm thanh ở tầng phần cứng.** `audio_policy_configuration.xml` phải có đường vào cho nguồn `VOICE_CALL` (Telephony Rx), và Audio HAL phải đưa âm thanh hai đầu ra đường đó. Nếu không, file ghi có thể im lặng dù đã có quyền.
+
+**6. Thử trước khi phát hành.** Gọi đi, nghe máy và ghi âm khi máy khóa, cả trước lần mở khóa đầu tiên; bản ghi đang lưu trong bộ nhớ chỉ dùng được sau khi mở khóa. Một số nơi bắt buộc phát tiếng báo khi ghi âm, ứng dụng hiện chưa có.
 
 ## Build
 

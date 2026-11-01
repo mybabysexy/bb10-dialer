@@ -47,7 +47,7 @@ data class PhoneSettings(
     val showNumbers: Boolean = true,
     /** The Missed tab was last opened with the missed call of this time at the top. */
     val missedSeenMillis: Long = 0,
-    /** What the user chose; recording also takes root: see [canRecordCalls]. */
+    /** What the user chose; recording also takes a way to do it: see [canRecordCalls]. */
     val callRecording: Boolean = false,
     /** Start recording as soon as a call connects. */
     val autoRecord: Boolean = false,
@@ -57,8 +57,11 @@ data class PhoneSettings(
     /** `su` worked the last time the app asked. Only then does it ask again unprompted. */
     val rootGranted: Boolean = false,
 ) {
-    /** Recording is for phones with root. Without this the call screen has no Record action. */
-    val canRecordCalls: Boolean get() = callRecording && rootGranted
+    /**
+     * Recording is for phones with root, or a ROM that gives the app the phone line itself. Without
+     * this the call screen has no Record action.
+     */
+    fun canRecordCalls(hasLine: Boolean): Boolean = callRecording && (rootGranted || hasLine)
 }
 
 /** The ringtone of a call on SIM [slot], from the settings; null for the phone's own. */

@@ -32,6 +32,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import com.duc1607.bb10dialer.R
 import com.duc1607.bb10dialer.data.PhoneSettingsStore
+import com.duc1607.bb10dialer.data.canRecordCalls
 import com.duc1607.bb10dialer.telecom.CallCenter
 import com.duc1607.bb10dialer.telecom.CallCenterState
 import com.duc1607.bb10dialer.telecom.Caller
@@ -155,7 +156,7 @@ private fun Ongoing(call: LiveCall, state: CallCenterState, onAddCall: () -> Uni
         recording = state.recording,
         note = state.notes[call.id].orEmpty(),
         canRecord = !call.emergency,
-        showRecord = PhoneSettingsStore.get(LocalContext.current).canRecordCalls,
+        showRecord = PhoneSettingsStore.get(LocalContext.current).canRecordCalls(LocalContext.current),
         onNoteChange = { CallCenter.setNote(call.id, it) },
         onNoteDraft = { CallCenter.draftNote(call.id, it) },
         onSpeaker = { if (audio.needsPicker) routing = true else CallCenter.toggleSpeaker() },

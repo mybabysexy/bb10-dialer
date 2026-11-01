@@ -49,7 +49,7 @@
 
 ## 通话录音
 
-录音**需要手机已通过 Magisk 或 KernelSU 获取 Root**。没有 Root 时，此功能保持关闭，通话界面也不显示录音按钮。
+录音**需要手机已通过 Magisk 或 KernelSU 获取 Root**，或使用[内置本应用的 ROM](#集成到-rom)。否则此功能保持关闭，通话界面也不显示录音按钮。
 
 Android 只允许系统应用录制通话线路，因此应用需要通过一个模块被视为系统应用：
 
@@ -57,7 +57,7 @@ Android 只允许系统应用录制通话线路，因此应用需要通过一个
 2. 进入**设置 → 通话录音**，轻触**请求 Root 权限**，并在 Root 管理器中允许。
 3. 开启**允许通话录音**。如需在通话接通时自动录音，再开启下方的开关。
 4. 轻触**录制通话线路**安装模块，然后选择**重启**。
-5. 拨打一通测试电话并录音，回听确认双方声音都有。并非所有手机都会输出声音。
+5. 拨打一通测试电话并录音，回听确认双方声音都有。并非所有手机都会输出声音；在已 Root 并安装模块的 Q25 上录音正常。
 
 **移除：**在同一页面轻触**移除线路录音**，然后重启手机。如果手机卡在启动过程中，请进入 Magisk 安全模式以关闭模块。
 
@@ -80,6 +80,53 @@ Android 只允许系统应用录制通话线路，因此应用需要通过一个
 
 **拦截**
 - 自动识别骚扰电话：目前只拦截您输入的名单。
+
+## 集成到 ROM
+
+面向希望将应用内置到系统的 ROM 开发者，无需 Root 或模块即可通话录音。应用获得通话线路权限后，通话录音页面会自动隐藏 Root 和模块相关内容。
+
+这些步骤尚未在真实 ROM 上试过。配置名称可能因 Android 版本而异。
+
+**要求：**Android 14（API 34）及以上，并需要 BB10 界面套件的源码。本应用采用非商业许可证：随手机销售或收费的 ROM 需要另行取得许可。
+
+**1. 加入 ROM。**构建 `release`，使用固定密钥签名，每个版本提高 `versionCode`，以 prebuilt 方式添加，并将 `BB10Phone` 加入 `PRODUCT_PACKAGES`：
+
+```
+android_app_import {
+    name: "BB10Phone",
+    apk: "app-release.apk",
+    presigned: true,
+    privileged: true,
+    system_ext_specific: true,
+    dex_preopt: { enabled: true },
+    required: ["privapp-permissions-bb10phone"],
+}
+
+prebuilt_etc {
+    name: "privapp-permissions-bb10phone",
+    src: "privapp-permissions-bb10phone.xml",
+    sub_dir: "permissions",
+    system_ext_specific: true,
+}
+```
+
+**2. 允许通话线路权限。**应用需位于 `priv-app` 并列入允许名单，无需使用平台密钥签名。如果设备启用了 `ro.control_privapp_permissions=enforce` 而缺少此文件，手机可能无法启动。
+
+```xml
+<permissions>
+    <privapp-permissions package="com.duc1607.bb10dialer">
+        <permission name="android.permission.CAPTURE_AUDIO_OUTPUT" />
+    </privapp-permissions>
+</permissions>
+```
+
+**3. 设为默认电话应用。**在 framework 中 overlay `config_defaultDialer` 为 `com.duc1607.bb10dialer`。麦克风、联系人和通话记录权限可通过 `default-permissions` 文件预先授予。
+
+**4. 原有拨号应用。**建议先保留：默认电话应用出错时，Telecom 会回退到它。如要移除，请 overlay Telecom 的 `ui_default_package`、`dialer_default_class` 和 `incall_default_class`，指向 `MainActivity` 和 `.telecom.CallService`，然后充分测试紧急呼叫。
+
+**5. 硬件层音频。**`audio_policy_configuration.xml` 需要为 `VOICE_CALL` 音源（Telephony Rx）提供输入路由，Audio HAL 也必须将通话双方的声音输出到该路由。否则即使有权限，录音也可能没有声音。
+
+**6. 发布前测试。**在手机锁定时拨打、接听和录音，包括首次解锁之前；录音保存在解锁后才可用的存储中。某些地区要求录音时播放提示音，应用目前还没有此功能。
 
 ## 构建
 
