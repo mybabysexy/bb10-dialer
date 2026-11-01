@@ -1,0 +1,328 @@
+<resources>
+    <string name="app_name">Phone</string>
+
+    <string name="tab_calls">通话</string>
+    <string name="tab_contacts">联系人</string>
+    <string name="tab_dial_pad">拨号盘</string>
+
+    <string name="voicemail">语音信箱</string>
+    <string name="add_number">添加号码</string>
+    <string name="filter_all">全部</string>
+    <string name="filter_missed">未接</string>
+    <string name="filter_missed_count">未接 (%1$d)</string>
+    <string name="unknown_number">未知</string>
+    <string name="private_number">私密号码</string>
+    <string name="labeled_number">%1$s：%2$s</string>
+    <string name="details_subtitle">%1$s，%2$s</string>
+    <string name="no_calls">没有通话记录</string>
+    <string name="no_missed_calls">没有未接来电</string>
+    <string name="no_contacts">没有联系人</string>
+    <string name="calls_permission">请允许访问通话记录以查看最近通话。</string>
+    <string name="contacts_permission">请允许访问通讯录以在此查看联系人。</string>
+    <string name="allow_access">允许访问</string>
+
+    <string name="action_info">详情</string>
+    <string name="action_sms">发送短信</string>
+    <string name="action_call">呼叫</string>
+    <string name="call_sim">用 SIM %1$d 呼叫</string>
+    <string name="call_count">" (%1$d)"</string>
+    <string name="expand">显示操作</string>
+    <string name="collapse">隐藏操作</string>
+
+    <string name="call_canceled">已取消</string>
+    <string name="call_missed">未接</string>
+    <string name="call_rejected">已拒接</string>
+    <string name="call_blocked">已拦截</string>
+    <string name="call_voicemail">语音信箱</string>
+    <string name="call_duration_seconds">%1$d 秒</string>
+    <string name="call_duration_minutes">%1$d 分 %2$d 秒</string>
+    <string name="call_duration_hours">%1$d 小时 %2$d 分</string>
+    <string name="callback">回拨</string>
+    <string name="contact_card">联系人名片</string>
+    <string name="add_contact">添加联系人</string>
+
+    <string name="search_contacts">搜索联系人</string>
+    <string name="view_contact_details">查看联系人详情</string>
+    <string name="favorites">收藏</string>
+    <string name="favorite">收藏</string>
+
+    <string name="enter_number">输入号码</string>
+    <string name="pad_letters_0">+</string>
+    <string name="pad_letters_2">ABC</string>
+    <string name="pad_letters_3">DEF</string>
+    <string name="pad_letters_4">GHI</string>
+    <string name="pad_letters_5">JKL</string>
+    <string name="pad_letters_6">MNO</string>
+    <string name="pad_letters_7">PQRS</string>
+    <string name="pad_letters_8">TUV</string>
+    <string name="pad_letters_9">WXYZ</string>
+    <plurals name="matching_numbers">
+        <item quantity="other">找到 %1$d 个匹配的号码</item>
+    </plurals>
+    <string name="show_matches">显示匹配的号码</string>
+    <string name="hide_matches">隐藏匹配的号码</string>
+    <string name="delete_digit">删除</string>
+
+    <string name="menu_to_top">回到顶部</string>
+    <string name="menu_to_bottom">转到底部</string>
+    <string name="menu_clear_calls">清除全部通话记录</string>
+    <string name="menu_change_line">切换电话线路</string>
+    <string name="menu_settings">设置</string>
+    <string name="clear_calls_title">清除全部通话记录？</string>
+    <string name="clear_calls_message">这将删除此设备上的全部通话记录，且无法撤销。</string>
+    <string name="clear">清除</string>
+    <string name="cancel">取消</string>
+
+    <!-- Debug toasts for what is not built yet. -->
+    <string name="debug_call">呼叫 %1$s</string>
+    <string name="debug_call_sim">呼叫 %1$s（SIM %2$d）</string>
+    <string name="no_sms_app">未找到短信应用</string>
+
+    <!-- The contact card, the contact form and the quick contact picker. -->
+    <string name="tab_details">详情</string>
+    <string name="tab_activity">动态</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_search">搜索</string>
+    <string name="action_new">新建</string>
+    <string name="call_type">呼叫%1$s</string>
+    <string name="text_type">发短信到%1$s</string>
+    <string name="new_contact">新建联系人</string>
+    <string name="edit_contact">编辑联系人</string>
+    <string name="save">保存</string>
+    <string name="save_to">保存到</string>
+    <string name="save_to_local">本地联系人</string>
+    <string name="add_picture">添加联系人照片</string>
+    <string name="first_name">名</string>
+    <string name="last_name">姓</string>
+    <string name="add_field">添加字段</string>
+    <string name="remove_field">移除字段</string>
+    <string name="mark_favorite">加入收藏</string>
+    <string name="remove_favorite">取消收藏</string>
+    <string name="delete">删除</string>
+    <string name="delete_contact_title">删除此联系人？</string>
+    <string name="delete_contact_message">该联系人将从此设备及其同步的帐号中移除。</string>
+    <string name="save_failed">无法更改联系人</string>
+    <string name="field_phone">电话号码</string>
+    <string name="field_mobile">手机号码</string>
+    <string name="field_work_phone">工作号码</string>
+    <string name="field_home_phone">住宅号码</string>
+    <string name="field_other_phone">其他号码</string>
+    <string name="field_email">电子邮件</string>
+    <string name="field_website">网站</string>
+    <string name="field_address">地址</string>
+    <string name="field_company">公司</string>
+    <string name="field_job_title">职位</string>
+    <string name="field_note">备注</string>
+    <string name="field_relation">关系</string>
+    <string name="field_label">标签</string>
+    <string name="field_nickname">昵称</string>
+    <string name="field_birthday">生日</string>
+    <string name="quick_contact_number">%1$s，%2$s</string>
+    <string name="select_contact">选择联系人</string>
+    <string name="select_number">选择号码</string>
+    <string name="remove_quick_contact">移除快捷联系人</string>
+
+    <!-- The call screens. -->
+    <string name="my_number">本机号码：%1$s</string>
+    <string name="unknown_caller">未知来电</string>
+    <string name="answer_call">接听</string>
+    <string name="decline_call">拒接</string>
+    <string name="silence_ringer">静音铃声</string>
+    <string name="call_speaker">扬声器</string>
+    <string name="call_mute">静音</string>
+    <string name="call_record">录音</string>
+    <string name="call_note">通话备注</string>
+    <string name="call_note_hint">写下这次通话的备注</string>
+    <string name="hide_dial_pad">隐藏拨号盘</string>
+    <string name="call_add">添加通话</string>
+    <string name="end_call">结束通话</string>
+    <string name="call_again">重新呼叫</string>
+    <!-- Phone Settings. -->
+    <string name="setting_title">电话设置</string>
+    <string name="about">关于</string>
+    <string name="about_made_by">Made with ❤️ by duc1607</string>
+    <string name="about_version">版本 %1$s</string>
+    <string name="about_github">GitHub</string>
+    <string name="setting_display">显示</string>
+    <string name="display_theme">外观</string>
+    <string name="display_accent">强调色</string>
+    <string-array name="accent_names">
+        <item>蓝色</item>
+        <item>青色</item>
+        <item>绿色</item>
+        <item>橙色</item>
+        <item>红色</item>
+        <item>紫色</item>
+    </string-array>
+    <string-array name="theme_modes">
+        <item>浅色</item>
+        <item>深色</item>
+        <item>跟随系统</item>
+    </string-array>
+    <string name="display_slider">显示接听滑块</string>
+    <string name="display_slider_note">关闭后，请使用通话键或通知接听。</string>
+    <string name="display_end_button">显示结束通话按钮</string>
+    <string name="display_numbers">显示已保存联系人的号码</string>
+    <string name="display_numbers_note">适用于快捷联系人、通话列表和通话界面。未保存的号码始终完整显示。</string>
+    <string name="setting_notifications">通知</string>
+    <string name="setting_silence_ringer">静音铃声</string>
+    <string name="setting_bluetooth">蓝牙</string>
+    <string name="setting_forwarding">呼叫转移</string>
+    <string name="setting_waiting">呼叫等待</string>
+    <string name="setting_blocking">呼叫限制</string>
+    <string name="setting_show_number">显示本机号码</string>
+    <string name="setting_reply_now">快速回复</string>
+    <string name="setting_smart_dialing">智能拨号</string>
+    <string name="setting_fixed_dialing">固定拨号</string>
+    <string name="setting_summary">通话统计</string>
+    <string name="setting_hearing_aid">助听器模式</string>
+    <string name="setting_tty">TTY</string>
+    <string name="setting_blacklist">黑名单</string>
+    <string name="setting_advanced">高级</string>
+    <string name="advanced_proximity">贴近耳朵时关闭屏幕</string>
+    <string name="advanced_device">设备</string>
+    <string-array name="phone_models">
+        <item>通用</item>
+        <item>Q25</item>
+        <item>P26</item>
+    </string-array>
+    <string name="advanced_background">后台运行</string>
+    <string name="advanced_battery">忽略电池优化</string>
+    <string name="advanced_allow_background">允许后台活动</string>
+    <string name="advanced_full_screen">全屏显示来电</string>
+    <string name="advanced_recording">通话录音</string>
+    <string name="advanced_recording_toggle">允许通话录音</string>
+    <string name="root_request">请求 Root 权限</string>
+    <string name="root_granted">已获得 Root 权限</string>
+    <string name="root_refused">未获得 Root 权限</string>
+    <string name="root_missing">此手机未 Root</string>
+    <string name="root_unknown">录音需要 Root。没有 Root 时，通话界面不显示录音按钮。</string>
+    <string name="recording_auto">通话接通时自动录音</string>
+    <string name="restart_title">立即重启？</string>
+    <string name="restart_confirm">重启</string>
+    <string name="pause_recording">暂停</string>
+    <string name="recording_position">播放位置</string>
+    <string name="line_install">录制通话线路</string>
+    <string name="line_remove">移除线路录音</string>
+    <string name="line_missing">当前通过麦克风录音，对方的声音可能不清楚。安装模块可直接录制通话线路。</string>
+    <string name="line_restart">模块已安装。重启手机后生效。</string>
+    <string name="line_active">应用现在可以录制通话线路。请听一段录音确认：并非所有手机都会输出声音。</string>
+    <string name="line_removing">模块将在下次重启时移除。</string>
+    <string name="line_unsupported">未找到 Magisk 或 KernelSU。</string>
+    <string name="line_failed">操作失败。</string>
+    <string name="blacklist_hint">号码或号段</string>
+    <string name="blacklist_add">添加</string>
+    <string name="blacklist_note">以这些号码开头的来电将被拒接，不会响铃。</string>
+    <string name="blacklist_empty">还没有号码</string>
+    <string name="hac_title">助听器设置</string>
+    <string name="settings_unknown">未知</string>
+    <string name="settings_loading">正在加载…</string>
+    <string name="settings_sim">SIM 卡</string>
+    <string name="settings_open_system">打开手机设置</string>
+    <string name="settings_network_failed">网络没有响应，无法在此更改。手机自带的设置可能仍然可用。</string>
+    <string name="notifications_all">所有通知</string>
+    <string name="notifications_sound">声音</string>
+    <string name="notifications_ringtone">铃声：%1$s</string>
+    <string name="notifications_ringtone_sim2">SIM 2 铃声：%1$s</string>
+    <string name="notifications_override">忽略情景模式音量</string>
+    <string name="notifications_vibrate">振动</string>
+    <string name="notifications_led">指示灯</string>
+    <string name="notifications_led_color">指示灯颜色</string>
+    <string name="notifications_led_note">有未接来电时指示灯亮起（仅限带指示灯的手机）。</string>
+    <string name="notifications_reset">恢复默认</string>
+    <string-array name="led_colors">
+        <item>红色</item>
+        <item>绿色</item>
+        <item>蓝色</item>
+        <item>白色</item>
+    </string-array>
+    <string name="silence_tap">轻触屏幕任意位置静音铃声</string>
+    <string name="silence_tap_note">开启后，来电时轻触屏幕任意位置即可静音铃声。关闭后，请轻触静音铃声图标。</string>
+    <string name="voicemail_access">接入号码</string>
+    <string name="voicemail_access_hint">编辑接入号码</string>
+    <string name="voicemail_note">留空时，通话页面会显示多一个快捷联系人来代替语音信箱。</string>
+    <string name="voicemail_password_note">语音信箱密码需拨打语音信箱更改。</string>
+    <string name="bt_answer">连接耳机时自动接听来电</string>
+    <string name="bt_answer_note">开启后，来电将在 5 秒后自动接听。更多耳机选项请在设备的蓝牙设置中更改。</string>
+    <string name="forward_all">转移所有来电</string>
+    <string name="forward_busy">遇忙转移</string>
+    <string name="forward_unreachable">无法接通时转移</string>
+    <string name="forward_no_reply">无应答时转移</string>
+    <string name="forward_to">转移到</string>
+    <string name="waiting_label">呼叫等待</string>
+    <string name="waiting_note">开启后，通话期间有其他来电时会提醒您。</string>
+    <string name="block_incoming">来电</string>
+    <string name="block_outgoing">去电</string>
+    <string name="block_all">全部限制</string>
+    <string name="block_roaming">漫游时全部限制</string>
+    <string name="block_international">限制所有国际电话</string>
+    <string name="block_international_roaming">漫游时限制所有国际电话</string>
+    <string name="block_change_password">更改密码</string>
+    <string name="block_password">呼叫限制密码</string>
+    <string name="block_password_old">当前密码</string>
+    <string name="block_password_new">新密码</string>
+    <string name="show_number_label">呼叫时显示本机号码</string>
+    <string name="reply_now_note">开启后，拒接来电时可以向来电者发送短信。要编辑默认短信，请轻触下方短信并输入新内容。</string>
+    <string name="reply_now_messages">快速回复短信</string>
+    <string name="smart_country">国家代码</string>
+    <string name="smart_area">区号</string>
+    <string name="smart_area_hint">设置区号</string>
+    <string name="smart_national">国内号码长度</string>
+    <string name="smart_note">输入地区信息后，手机会自动为电话号码添加正确的地区前缀。</string>
+    <string name="smart_extension">办公室分机接入号码</string>
+    <string name="smart_extension_hint">设置分机接入号码</string>
+    <string name="smart_pause">拨号后暂停</string>
+    <string name="smart_seconds">%1$d 秒</string>
+    <string name="smart_extension_length">分机号长度</string>
+    <string name="smart_reset">重置</string>
+    <string name="fdn_note">此设置和列表由 Android 管理：需要 SIM 卡的 PIN2。</string>
+    <string name="summary_total">通话总时长</string>
+    <string name="summary_all">所有号码</string>
+    <string name="summary_phone">电话</string>
+    <string name="summary_since">自 %1$s 起</string>
+    <string name="summary_reset">重置</string>
+    <string name="hac_note">开启助听器模式可改善与部分助听器的兼容性。此设置由 Android 管理。</string>
+    <string name="tty_note">开启 TTY 后可将手机与电传打字机配合使用。此设置由 Android 管理。</string>
+    <string name="no_sim">无 SIM 卡</string>
+    <string name="own_number_unknown">未知号码</string>
+    <string name="unknown_carrier">未知运营商</string>
+    <string name="sim_carrier">SIM %1$d：%2$s</string>
+    <string name="recordings">录音</string>
+    <string name="play_recording">播放录音</string>
+    <string name="block">拦截</string>
+    <string name="unblock">取消拦截</string>
+    <string name="sim_label">SIM %1$d</string>
+    <string name="choose_sim">呼叫方式</string>
+    <string name="route_title">音频输出</string>
+    <string name="route_earpiece">听筒</string>
+    <string name="route_headset">耳机</string>
+    <string name="post_dial_title">发送这些按键音？</string>
+    <string name="post_dial_send">发送</string>
+    <string name="reply_later">我稍后给你回电。</string>
+    <string name="reply_busy">现在不方便接听。</string>
+    <string name="reply_call_me">我在路上了。</string>
+    <string name="reply_write">自己写…</string>
+    <string name="conference_call">多方通话 (%1$d)</string>
+    <string name="conference_members">通话成员</string>
+    <string name="conference_separate">与 %1$s 单独通话</string>
+    <string name="conference_hang_up">挂断 %1$s</string>
+    <string name="call_held">保持中：%1$s</string>
+    <string name="swap_calls">切换</string>
+    <string name="merge_calls">合并通话</string>
+    <string name="resume_call">恢复</string>
+    <string name="end_and_answer">结束当前通话并接听</string>
+    <string name="call_in_progress_with">正在与 %1$s 通话</string>
+    <string name="return_to_call">返回通话</string>
+    <string name="record_failed">此手机无法录制这通电话</string>
+    <string name="call_permission">请允许电话权限以拨打电话</string>
+    <string name="set_default_app">设为默认电话应用</string>
+    <string name="channel_incoming">来电</string>
+    <string name="channel_incoming_quiet">屏幕上的来电</string>
+    <string name="channel_ongoing">当前通话</string>
+    <string name="channel_missed">未接来电</string>
+    <string name="missed_calls">%1$d 个未接来电</string>
+    <string name="call_status_on_hold">保持中</string>
+    <string name="call_status_dialing">正在呼叫…</string>
+    <string name="call_status_busy">忙线</string>
+    <string name="call_status_unreachable">无法接通</string>
+</resources>

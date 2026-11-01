@@ -1,0 +1,10 @@
+<resources>
+    <string name="preview_title">Giao diện cuộc gọi</string>
+    <string name="preview_saved">Liên hệ đã lưu</string>
+    <string name="preview_unknown">Số lạ</string>
+    <string name="preview_incoming">Cuộc gọi đến</string>
+    <string name="preview_dialing">Đang gọi đi</string>
+    <string name="preview_active">Đang nghe máy</string>
+    <string name="preview_busy">Máy bận</string>
+    <string name="preview_unreachable">Không liên lạc được</string>
+</resources>

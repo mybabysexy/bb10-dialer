@@ -1,0 +1,327 @@
+<resources>
+    <string name="app_name">Phone</string>
+
+    <string name="tab_calls">Cuộc gọi</string>
+    <string name="tab_contacts">Danh bạ</string>
+    <string name="tab_dial_pad">Bàn phím</string>
+
+    <string name="voicemail">Thư thoại</string>
+    <string name="add_number">Thêm số</string>
+    <string name="filter_all">Tất cả</string>
+    <string name="filter_missed">Gọi nhỡ</string>
+    <string name="filter_missed_count">Gọi nhỡ (%1$d)</string>
+    <string name="unknown_number">Không xác định</string>
+    <string name="private_number">Số riêng tư</string>
+    <string name="labeled_number">%1$s: %2$s</string>
+    <string name="details_subtitle">%1$s,   %2$s</string>
+    <string name="no_calls">Không có cuộc gọi</string>
+    <string name="no_missed_calls">Không có cuộc gọi nhỡ</string>
+    <string name="no_contacts">Không có liên hệ</string>
+    <string name="calls_permission">Cho phép truy cập nhật ký cuộc gọi để xem các cuộc gọi gần đây.</string>
+    <string name="contacts_permission">Cho phép truy cập danh bạ để xem liên hệ tại đây.</string>
+    <string name="allow_access">Cho phép</string>
+
+    <string name="action_info">Chi tiết</string>
+    <string name="action_sms">Gửi tin nhắn</string>
+    <string name="action_call">Gọi</string>
+    <string name="call_sim">Gọi SIM %1$d</string>
+    <string name="call_count">" (%1$d)"</string>
+    <string name="expand">Hiện thao tác</string>
+    <string name="collapse">Ẩn thao tác</string>
+
+    <string name="call_canceled">Đã hủy</string>
+    <string name="call_missed">Gọi nhỡ</string>
+    <string name="call_rejected">Đã từ chối</string>
+    <string name="call_blocked">Đã chặn</string>
+    <string name="call_voicemail">Thư thoại</string>
+    <string name="call_duration_seconds">%1$d giây</string>
+    <string name="call_duration_minutes">%1$d phút %2$d giây</string>
+    <string name="call_duration_hours">%1$d giờ %2$d phút</string>
+    <string name="callback">Gọi lại</string>
+    <string name="contact_card">Thẻ liên hệ</string>
+    <string name="add_contact">Thêm liên hệ</string>
+
+    <string name="search_contacts">Tìm liên hệ</string>
+    <string name="view_contact_details">Xem chi tiết liên hệ</string>
+    <string name="favorites">Yêu thích</string>
+    <string name="favorite">Yêu thích</string>
+
+    <string name="enter_number">Nhập số</string>
+    <string name="pad_letters_0">+</string>
+    <string name="pad_letters_2">ABC</string>
+    <string name="pad_letters_3">DEF</string>
+    <string name="pad_letters_4">GHI</string>
+    <string name="pad_letters_5">JKL</string>
+    <string name="pad_letters_6">MNO</string>
+    <string name="pad_letters_7">PQRS</string>
+    <string name="pad_letters_8">TUV</string>
+    <string name="pad_letters_9">WXYZ</string>
+    <plurals name="matching_numbers">
+        <item quantity="other">Tìm thấy %1$d số trùng khớp</item>
+    </plurals>
+    <string name="show_matches">Hiện các số trùng khớp</string>
+    <string name="hide_matches">Ẩn các số trùng khớp</string>
+    <string name="delete_digit">Xóa</string>
+
+    <string name="menu_to_top">Lên đầu</string>
+    <string name="menu_to_bottom">Xuống cuối</string>
+    <string name="menu_clear_calls">Xóa toàn bộ nhật ký</string>
+    <string name="menu_change_line">Đổi đường dây</string>
+    <string name="menu_settings">Cài đặt</string>
+    <string name="clear_calls_title">Xóa toàn bộ nhật ký cuộc gọi?</string>
+    <string name="clear_calls_message">Toàn bộ lịch sử cuộc gọi trên máy sẽ bị xóa và không thể khôi phục.</string>
+    <string name="clear">Xóa</string>
+    <string name="cancel">Hủy</string>
+    <string name="no_sms_app">Không tìm thấy ứng dụng tin nhắn</string>
+
+    <string name="debug_call">Gọi %1$s</string>
+    <string name="debug_call_sim">Gọi %1$s (SIM %2$d)</string>
+
+    <!-- The contact card, the contact form and the quick contact picker. -->
+    <string name="tab_details">Chi tiết</string>
+    <string name="tab_activity">Hoạt động</string>
+    <string name="action_edit">Sửa</string>
+    <string name="action_search">Tìm</string>
+    <string name="action_new">Mới</string>
+    <string name="call_type">Gọi %1$s</string>
+    <string name="text_type">Nhắn tin %1$s</string>
+    <string name="new_contact">Liên hệ mới</string>
+    <string name="edit_contact">Sửa liên hệ</string>
+    <string name="save">Lưu</string>
+    <string name="save_to">Lưu vào</string>
+    <string name="save_to_local">Danh bạ trên máy</string>
+    <string name="add_picture">Thêm ảnh liên hệ</string>
+    <string name="first_name">Tên</string>
+    <string name="last_name">Họ</string>
+    <string name="add_field">Thêm mục</string>
+    <string name="remove_field">Xóa mục</string>
+    <string name="mark_favorite">Đánh dấu yêu thích</string>
+    <string name="remove_favorite">Bỏ yêu thích</string>
+    <string name="delete">Xóa</string>
+    <string name="delete_contact_title">Xóa liên hệ này?</string>
+    <string name="delete_contact_message">Liên hệ sẽ bị xóa khỏi máy và khỏi tài khoản mà nó đồng bộ.</string>
+    <string name="save_failed">Không thay đổi được liên hệ</string>
+    <string name="field_phone">Số điện thoại</string>
+    <string name="field_mobile">Số di động</string>
+    <string name="field_work_phone">Số công ty</string>
+    <string name="field_home_phone">Số nhà riêng</string>
+    <string name="field_other_phone">Số khác</string>
+    <string name="field_email">Email</string>
+    <string name="field_website">Trang web</string>
+    <string name="field_address">Địa chỉ</string>
+    <string name="field_company">Công ty</string>
+    <string name="field_job_title">Chức danh</string>
+    <string name="field_note">Ghi chú</string>
+    <string name="field_relation">Mối quan hệ</string>
+    <string name="field_label">Nhãn</string>
+    <string name="field_nickname">Biệt danh</string>
+    <string name="field_birthday">Sinh nhật</string>
+    <string name="quick_contact_number">%1$s, %2$s</string>
+    <string name="select_contact">Chọn liên hệ</string>
+    <string name="select_number">Chọn số</string>
+    <string name="remove_quick_contact">Bỏ liên hệ nhanh</string>
+
+    <!-- The call screens. -->
+    <string name="my_number">Số của tôi: %1$s</string>
+    <string name="unknown_caller">Người gọi không xác định</string>
+    <string name="answer_call">Nghe</string>
+    <string name="decline_call">Từ chối</string>
+    <string name="silence_ringer">Tắt chuông</string>
+    <string name="call_speaker">Loa ngoài</string>
+    <string name="call_mute">Tắt tiếng</string>
+    <string name="call_record">Ghi âm</string>
+    <string name="call_note">Ghi chú</string>
+    <string name="call_note_hint">Viết ghi chú về cuộc gọi này</string>
+    <string name="hide_dial_pad">Ẩn bàn phím</string>
+    <string name="call_add">Thêm cuộc gọi</string>
+    <string name="end_call">Kết thúc</string>
+    <string name="call_again">Gọi lại</string>
+    <!-- Phone Settings. -->
+    <string name="setting_title">Cài đặt điện thoại</string>
+    <string name="about">Giới thiệu</string>
+    <string name="about_made_by">Made with ❤️ by duc1607</string>
+    <string name="about_version">Phiên bản %1$s</string>
+    <string name="about_github">GitHub</string>
+    <string name="setting_display">Hiển thị</string>
+    <string name="display_theme">Giao diện</string>
+    <string name="display_accent">Màu nhấn</string>
+    <string-array name="accent_names">
+        <item>Xanh dương</item>
+        <item>Xanh ngọc</item>
+        <item>Xanh lá</item>
+        <item>Cam</item>
+        <item>Đỏ</item>
+        <item>Tím</item>
+    </string-array>
+    <string-array name="theme_modes">
+        <item>Sáng</item>
+        <item>Tối</item>
+        <item>Theo hệ thống</item>
+    </string-array>
+    <string name="display_slider">Hiện thanh kéo nghe/từ chối</string>
+    <string name="display_slider_note">Khi tắt, nghe máy bằng phím Gọi hoặc từ thông báo.</string>
+    <string name="display_end_button">Hiện nút kết thúc trong cuộc gọi</string>
+    <string name="display_numbers">Hiện số của liên hệ đã lưu</string>
+    <string name="display_numbers_note">Ở liên hệ nhanh, danh sách cuộc gọi và màn cuộc gọi. Số chưa lưu luôn hiện đầy đủ.</string>
+    <string name="setting_notifications">Thông báo</string>
+    <string name="setting_silence_ringer">Tắt chuông</string>
+    <string name="setting_bluetooth">Bluetooth</string>
+    <string name="setting_forwarding">Chuyển tiếp cuộc gọi</string>
+    <string name="setting_waiting">Chờ cuộc gọi</string>
+    <string name="setting_blocking">Chặn cuộc gọi</string>
+    <string name="setting_show_number">Hiện số của tôi</string>
+    <string name="setting_reply_now">Trả lời nhanh</string>
+    <string name="setting_smart_dialing">Quay số thông minh</string>
+    <string name="setting_fixed_dialing">Số quay cố định</string>
+    <string name="setting_summary">Tổng kết cuộc gọi</string>
+    <string name="setting_hearing_aid">Chế độ trợ thính</string>
+    <string name="setting_tty">TTY</string>
+    <string name="setting_blacklist">Danh sách đen</string>
+    <string name="setting_advanced">Nâng cao</string>
+    <string name="advanced_proximity">Tắt màn hình khi áp tai</string>
+    <string name="advanced_device">Thiết bị</string>
+    <string-array name="phone_models">
+        <item>Generic</item>
+        <item>Q25</item>
+        <item>P26</item>
+    </string-array>
+    <string name="advanced_background">Chạy nền</string>
+    <string name="advanced_battery">Không tối ưu hóa pin</string>
+    <string name="advanced_allow_background">Cho phép hoạt động nền</string>
+    <string name="advanced_full_screen">Hiện cuộc gọi toàn màn hình</string>
+    <string name="advanced_recording">Ghi âm cuộc gọi</string>
+    <string name="advanced_recording_toggle">Cho phép ghi âm cuộc gọi</string>
+    <string name="root_request">Yêu cầu quyền root</string>
+    <string name="root_granted">Đã có quyền root</string>
+    <string name="root_refused">Chưa được cấp quyền root</string>
+    <string name="root_missing">Máy này chưa root</string>
+    <string name="root_unknown">Ghi âm cần quyền root. Không có root thì màn cuộc gọi không có nút Ghi âm.</string>
+    <string name="recording_auto">Tự động ghi âm khi cuộc gọi kết nối</string>
+    <string name="restart_title">Khởi động lại máy?</string>
+    <string name="restart_confirm">Khởi động lại</string>
+    <string name="pause_recording">Tạm dừng</string>
+    <string name="recording_position">Vị trí đang phát</string>
+    <string name="line_install">Ghi đường thoại</string>
+    <string name="line_remove">Gỡ ghi đường thoại</string>
+    <string name="line_missing">Hiện ghi âm qua micro nên có thể khó nghe đầu kia. Cài module để ghi thẳng đường thoại.</string>
+    <string name="line_restart">Đã cài module. Khởi động lại máy để áp dụng.</string>
+    <string name="line_active">App đã được phép ghi đường thoại. Hãy nghe thử một bản ghi: không phải máy nào cũng đưa âm thanh ra.</string>
+    <string name="line_removing">Module sẽ được gỡ khi khởi động lại máy.</string>
+    <string name="line_unsupported">Không tìm thấy Magisk hoặc KernelSU.</string>
+    <string name="line_failed">Không làm được.</string>
+    <string name="blacklist_hint">Số hoặc đầu số</string>
+    <string name="blacklist_add">Thêm</string>
+    <string name="blacklist_note">Cuộc gọi đến từ các số bắt đầu bằng những số này sẽ bị từ chối, không đổ chuông.</string>
+    <string name="blacklist_empty">Chưa có số nào</string>
+    <string name="hac_title">Cài đặt trợ thính</string>
+    <string name="settings_unknown">Không rõ</string>
+    <string name="settings_loading">Đang tải…</string>
+    <string name="settings_sim">SIM</string>
+    <string name="settings_open_system">Mở cài đặt của máy</string>
+    <string name="settings_network_failed">Nhà mạng không phản hồi nên chưa đổi được mục này ở đây. Cài đặt của máy có thể vẫn dùng được.</string>
+    <string name="notifications_all">Tất cả thông báo</string>
+    <string name="notifications_sound">Âm thanh</string>
+    <string name="notifications_ringtone">Nhạc chuông: %1$s</string>
+    <string name="notifications_ringtone_sim2">Nhạc chuông SIM 2: %1$s</string>
+    <string name="notifications_override">Bỏ qua âm lượng cấu hình</string>
+    <string name="notifications_vibrate">Rung</string>
+    <string name="notifications_led">Đèn LED</string>
+    <string name="notifications_led_color">Màu đèn LED</string>
+    <string name="notifications_led_note">Đèn LED sáng khi có cuộc gọi nhỡ, trên máy có đèn.</string>
+    <string name="notifications_reset">Đặt lại mặc định</string>
+    <string-array name="led_colors">
+        <item>Đỏ</item>
+        <item>Xanh lá</item>
+        <item>Xanh dương</item>
+        <item>Trắng</item>
+    </string-array>
+    <string name="silence_tap">Tắt chuông bằng cách chạm vào bất kỳ đâu trên màn hình</string>
+    <string name="silence_tap_note">Khi bật, chạm vào bất kỳ đâu trên màn hình để tắt chuông khi có cuộc gọi đến. Khi tắt, chạm vào biểu tượng Tắt chuông.</string>
+    <string name="voicemail_access">Số truy cập</string>
+    <string name="voicemail_access_hint">Sửa số truy cập</string>
+    <string name="voicemail_note">Để trống thì màn Cuộc gọi hiện thêm một liên hệ nhanh thay cho Thư thoại.</string>
+    <string name="voicemail_password_note">Mật khẩu thư thoại được đổi bằng cách gọi vào thư thoại.</string>
+    <string name="bt_answer">Tự động nghe máy khi đang kết nối tai nghe</string>
+    <string name="bt_answer_note">Khi bật, cuộc gọi sẽ tự được nghe sau 5 giây. Các tùy chọn khác của tai nghe nằm trong cài đặt Bluetooth của máy.</string>
+    <string name="forward_all">Chuyển tiếp mọi cuộc gọi</string>
+    <string name="forward_busy">Chuyển tiếp khi máy bận</string>
+    <string name="forward_unreachable">Chuyển tiếp khi không liên lạc được</string>
+    <string name="forward_no_reply">Chuyển tiếp khi không trả lời</string>
+    <string name="forward_to">Chuyển tiếp đến</string>
+    <string name="waiting_label">Chờ cuộc gọi</string>
+    <string name="waiting_note">Khi bật, bạn được báo khi có cuộc gọi khác trong lúc đang gọi.</string>
+    <string name="block_incoming">Cuộc gọi đến</string>
+    <string name="block_outgoing">Cuộc gọi đi</string>
+    <string name="block_all">Chặn tất cả</string>
+    <string name="block_roaming">Chặn tất cả khi chuyển vùng</string>
+    <string name="block_international">Chặn tất cả cuộc gọi quốc tế</string>
+    <string name="block_international_roaming">Chặn cuộc gọi quốc tế khi chuyển vùng</string>
+    <string name="block_change_password">Đổi mật khẩu</string>
+    <string name="block_password">Mật khẩu chặn cuộc gọi</string>
+    <string name="block_password_old">Mật khẩu hiện tại</string>
+    <string name="block_password_new">Mật khẩu mới</string>
+    <string name="show_number_label">Cho phép hiện số của tôi khi gọi</string>
+    <string name="reply_now_note">Khi bật, bạn có thể gửi tin nhắn cho người gọi khi bỏ qua cuộc gọi đến. Để sửa tin nhắn mặc định, chạm vào tin nhắn bên dưới và nhập nội dung mới.</string>
+    <string name="reply_now_messages">Tin nhắn trả lời nhanh</string>
+    <string name="smart_country">Mã quốc gia</string>
+    <string name="smart_area">Mã vùng</string>
+    <string name="smart_area_hint">Đặt mã vùng</string>
+    <string name="smart_national">Độ dài số trong nước</string>
+    <string name="smart_note">Nhập thông tin khu vực để máy tự thêm đúng mã vùng vào số điện thoại.</string>
+    <string name="smart_extension">Số truy cập máy nhánh văn phòng</string>
+    <string name="smart_extension_hint">Đặt số truy cập máy nhánh</string>
+    <string name="smart_pause">Tạm dừng sau khi quay số</string>
+    <string name="smart_seconds">%1$d giây</string>
+    <string name="smart_extension_length">Độ dài máy nhánh</string>
+    <string name="smart_reset">Đặt lại</string>
+    <string name="fdn_note">Android tự giữ cài đặt và danh sách này: cần mã PIN2 của SIM.</string>
+    <string name="summary_total">Tổng thời gian gọi</string>
+    <string name="summary_all">Tất cả các số</string>
+    <string name="summary_phone">Điện thoại</string>
+    <string name="summary_since">Từ %1$s</string>
+    <string name="summary_reset">Đặt lại</string>
+    <string name="hac_note">Bật chế độ trợ thính để tương thích tốt hơn với một số thiết bị trợ thính. Android tự giữ cài đặt này.</string>
+    <string name="tty_note">Bật TTY để dùng máy với thiết bị teletypewriter. Android tự giữ cài đặt này.</string>
+    <string name="no_sim">Không có SIM</string>
+    <string name="own_number_unknown">Không rõ số</string>
+    <string name="unknown_carrier">Không rõ nhà mạng</string>
+    <string name="sim_carrier">SIM %1$d: %2$s</string>
+    <string name="recordings">Bản ghi âm</string>
+    <string name="play_recording">Phát bản ghi</string>
+    <string name="block">Chặn</string>
+    <string name="unblock">Bỏ chặn</string>
+    <string name="sim_label">SIM %1$d</string>
+    <string name="choose_sim">Gọi bằng</string>
+    <string name="route_title">Đầu ra âm thanh</string>
+    <string name="route_earpiece">Điện thoại</string>
+    <string name="route_headset">Tai nghe</string>
+    <string name="post_dial_title">Gửi các số này?</string>
+    <string name="post_dial_send">Gửi</string>
+    <string name="reply_later">Tôi sẽ gọi lại sau.</string>
+    <string name="reply_busy">Giờ tôi không nghe máy được.</string>
+    <string name="reply_call_me">Tôi đang trên đường đến.</string>
+    <string name="reply_write">Tự viết…</string>
+    <string name="conference_call">Hội nghị (%1$d)</string>
+    <string name="conference_members">Người trong cuộc gọi</string>
+    <string name="conference_separate">Nói riêng với %1$s</string>
+    <string name="conference_hang_up">Ngắt máy với %1$s</string>
+    <string name="call_held">Đang giữ: %1$s</string>
+    <string name="swap_calls">Đổi</string>
+    <string name="merge_calls">Gộp cuộc gọi</string>
+    <string name="resume_call">Tiếp tục</string>
+    <string name="end_and_answer">Kết thúc cuộc gọi này và nghe</string>
+    <string name="call_in_progress_with">Đang gọi với %1$s</string>
+    <string name="return_to_call">Quay lại cuộc gọi</string>
+    <string name="record_failed">Không ghi âm được cuộc gọi này trên máy</string>
+    <string name="call_permission">Cho phép quyền điện thoại để gọi</string>
+    <string name="set_default_app">Đặt làm ứng dụng gọi mặc định</string>
+    <string name="channel_incoming">Cuộc gọi đến</string>
+    <string name="channel_incoming_quiet">Cuộc gọi đến đang hiện trên màn hình</string>
+    <string name="channel_ongoing">Cuộc gọi hiện tại</string>
+    <string name="channel_missed">Cuộc gọi nhỡ</string>
+    <string name="missed_calls">%1$d cuộc gọi nhỡ</string>
+    <string name="call_status_on_hold">Đang giữ máy</string>
+    <string name="call_status_dialing">Đang gọi…</string>
+    <string name="call_status_busy">Máy bận</string>
+    <string name="call_status_unreachable">Không liên lạc được</string>
+</resources>

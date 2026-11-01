@@ -1,0 +1,6 @@
+# Ahead-of-time compile the app and its kit, so the first scroll after a start is not interpreted.
+# Compose's own libraries bring their rules with them.
+HSPLcom/duc1607/bb10dialer/**;->**(**)**
+Lcom/duc1607/bb10dialer/**;
+HSPLduc1607/bb10/designsystem/**;->**(**)**
+Lduc1607/bb10/designsystem/**;

@@ -1,0 +1,10 @@
+<resources>
+    <string name="preview_title">Call UI</string>
+    <string name="preview_saved">Saved contact</string>
+    <string name="preview_unknown">Unknown number</string>
+    <string name="preview_incoming">Incoming</string>
+    <string name="preview_dialing">Calling</string>
+    <string name="preview_active">In call</string>
+    <string name="preview_busy">Busy</string>
+    <string name="preview_unreachable">Can\'t be reached</string>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- RecordingProbe. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <application>
+        <!-- Shows the call screens before there are real calls. Debug builds only. -->
+        <activity
+            android:name=".CallPreviewActivity"
+            android:exported="true"
+            android:label="@string/preview_title">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- The pictures in the README, on made up data. -->
+        <activity android:name=".ReadmeShotsActivity" android:exported="true" />
+        <service
+            android:name=".FakeCallService"
+            android:exported="true"
+            android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.ConnectionService" />
+            </intent-filter>
+        </service>
+        <receiver android:name=".FakeCallReceiver" android:exported="true" />
+        <service
+            android:name=".FakeKeyboard"
+            android:exported="true"
+            android:label="@string/preview_title"
+            android:permission="android.permission.BIND_INPUT_METHOD">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data android:name="android.view.im" android:resource="@xml/fake_keyboard" />
+        </service>
+    </application>
+
+</manifest>

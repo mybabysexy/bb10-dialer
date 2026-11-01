@@ -1,0 +1,19 @@
+[versions]
+agp = "9.2.1"
+kotlin = "2.2.10"
+activityCompose = "1.9.3"
+bb10Kit = "0.1.0"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+
+[libraries]
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+bb10-kit = { group = "duc1607", name = "bb10-kotlin-ui-kit", version.ref = "bb10Kit" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

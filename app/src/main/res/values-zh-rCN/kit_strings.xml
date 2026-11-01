@@ -1,0 +1,40 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
+    <!-- The UI kit has no Chinese of its own: these override its strings by name. -->
+    <string name="bb10_navigation_menu">菜单</string>
+    <string name="bb10_more_actions">更多</string>
+    <string name="bb10_back">返回</string>
+    <string name="bb10_cancel">取消</string>
+    <string name="bb10_search">搜索</string>
+    <string name="bb10_show_password">显示密码</string>
+    <string name="bb10_hide_password">隐藏密码</string>
+    <string name="bb10_clear_text">清除</string>
+    <string name="bb10_required">必填</string>
+    <string name="bb10_expanded">已展开</string>
+    <string name="bb10_collapsed">已收起</string>
+    <string name="bb10_ok">确定</string>
+    <string name="bb10_today">今天</string>
+    <string name="bb10_day">日</string>
+    <string name="bb10_month">月</string>
+    <string name="bb10_year">年</string>
+    <string name="bb10_hour">时</string>
+    <string name="bb10_minute">分</string>
+    <string name="bb10_date_pattern">%3$d年%2$s%1$d日</string>
+    <string-array name="bb10_months">
+        <item>1月</item><item>2月</item><item>3月</item><item>4月</item>
+        <item>5月</item><item>6月</item><item>7月</item><item>8月</item>
+        <item>9月</item><item>10月</item><item>11月</item><item>12月</item>
+    </string-array>
+    <string-array name="bb10_weekdays">
+        <item>星期一</item><item>星期二</item><item>星期三</item><item>星期四</item>
+        <item>星期五</item><item>星期六</item><item>星期日</item>
+    </string-array>
+    <string-array name="bb10_am_pm">
+        <item>上午</item><item>下午</item>
+    </string-array>
+    <string name="bb10_display_size">显示大小</string>
+    <string name="bb10_scale_small">小</string>
+    <string name="bb10_scale_normal">标准</string>
+    <string name="bb10_scale_large">大</string>
+    <string name="bb10_scale_extra_large">特大</string>
+    <string name="bb10_scale_huge">超大</string>
+</resources>

@@ -1,0 +1,329 @@
+<resources>
+    <string name="app_name">Phone</string>
+
+    <string name="tab_calls">Calls</string>
+    <string name="tab_contacts">Contacts</string>
+    <string name="tab_dial_pad">Dial Pad</string>
+
+    <string name="voicemail">Voicemail</string>
+    <string name="add_number">Add Number</string>
+    <string name="filter_all">All</string>
+    <string name="filter_missed">Missed</string>
+    <string name="filter_missed_count">Missed (%1$d)</string>
+    <string name="unknown_number">Unknown</string>
+    <string name="private_number">Private number</string>
+    <string name="labeled_number">%1$s: %2$s</string>
+    <string name="details_subtitle">%1$s,   %2$s</string>
+    <string name="no_calls">No calls</string>
+    <string name="no_missed_calls">No missed calls</string>
+    <string name="no_contacts">No contacts</string>
+    <string name="calls_permission">Allow access to the call log to see recent calls.</string>
+    <string name="contacts_permission">Allow access to contacts to see them here.</string>
+    <string name="allow_access">Allow access</string>
+
+    <string name="action_info">Details</string>
+    <string name="action_sms">Send message</string>
+    <string name="action_call">Call</string>
+    <string name="call_sim">Call SIM %1$d</string>
+    <string name="call_count">" (%1$d)"</string>
+    <string name="expand">Show actions</string>
+    <string name="collapse">Hide actions</string>
+
+    <string name="call_canceled">Canceled</string>
+    <string name="call_missed">Missed</string>
+    <string name="call_rejected">Rejected</string>
+    <string name="call_blocked">Blocked</string>
+    <string name="call_voicemail">Voicemail</string>
+    <string name="call_duration_seconds">%1$d sec</string>
+    <string name="call_duration_minutes">%1$d min %2$d sec</string>
+    <string name="call_duration_hours">%1$d hr %2$d min</string>
+    <string name="callback">Callback</string>
+    <string name="contact_card">Contact Card</string>
+    <string name="add_contact">Add Contact</string>
+
+    <string name="search_contacts">Search contacts</string>
+    <string name="view_contact_details">View Contact Details</string>
+    <string name="favorites">Favorites</string>
+    <string name="favorite">Favorite</string>
+
+    <string name="enter_number">Enter Number</string>
+    <string name="pad_letters_0">+</string>
+    <string name="pad_letters_2">ABC</string>
+    <string name="pad_letters_3">DEF</string>
+    <string name="pad_letters_4">GHI</string>
+    <string name="pad_letters_5">JKL</string>
+    <string name="pad_letters_6">MNO</string>
+    <string name="pad_letters_7">PQRS</string>
+    <string name="pad_letters_8">TUV</string>
+    <string name="pad_letters_9">WXYZ</string>
+    <plurals name="matching_numbers">
+        <item quantity="one">%1$d matching number found</item>
+        <item quantity="other">%1$d matching numbers found</item>
+    </plurals>
+    <string name="show_matches">Show matching numbers</string>
+    <string name="hide_matches">Hide matching numbers</string>
+    <string name="delete_digit">Delete</string>
+
+    <string name="menu_to_top">To Top</string>
+    <string name="menu_to_bottom">To Bottom</string>
+    <string name="menu_clear_calls">Clear All Call Logs</string>
+    <string name="menu_change_line">Change Phone Line</string>
+    <string name="menu_settings">Settings</string>
+    <string name="clear_calls_title">Clear all call logs?</string>
+    <string name="clear_calls_message">This deletes the whole call history from this device. It cannot be undone.</string>
+    <string name="clear">Clear</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Debug toasts for what is not built yet. -->
+    <string name="debug_call">Call %1$s</string>
+    <string name="debug_call_sim">Call %1$s (SIM %2$d)</string>
+    <string name="no_sms_app">No messaging app found</string>
+
+    <!-- The contact card, the contact form and the quick contact picker. -->
+    <string name="tab_details">Details</string>
+    <string name="tab_activity">Activity</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_search">Search</string>
+    <string name="action_new">New</string>
+    <string name="call_type">Call %1$s</string>
+    <string name="text_type">Text %1$s</string>
+    <string name="new_contact">New Contact</string>
+    <string name="edit_contact">Edit Contact</string>
+    <string name="save">Save</string>
+    <string name="save_to">Save to</string>
+    <string name="save_to_local">Local Contacts</string>
+    <string name="add_picture">Add contact picture</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="add_field">Add Field</string>
+    <string name="remove_field">Remove field</string>
+    <string name="mark_favorite">Mark Favorite</string>
+    <string name="remove_favorite">Remove Favorite</string>
+    <string name="delete">Delete</string>
+    <string name="delete_contact_title">Delete this contact?</string>
+    <string name="delete_contact_message">The contact is removed from this device and from the account it syncs with.</string>
+    <string name="save_failed">Could not change the contact</string>
+    <string name="field_phone">Phone Number</string>
+    <string name="field_mobile">Mobile Number</string>
+    <string name="field_work_phone">Work Number</string>
+    <string name="field_home_phone">Home Number</string>
+    <string name="field_other_phone">Other Number</string>
+    <string name="field_email">Email</string>
+    <string name="field_website">Website</string>
+    <string name="field_address">Address</string>
+    <string name="field_company">Company</string>
+    <string name="field_job_title">Job Title</string>
+    <string name="field_note">Note</string>
+    <string name="field_relation">Relationship</string>
+    <string name="field_label">Label</string>
+    <string name="field_nickname">Nickname</string>
+    <string name="field_birthday">Birthday</string>
+    <string name="quick_contact_number">%1$s, %2$s</string>
+    <string name="select_contact">Select Contact</string>
+    <string name="select_number">Select Number</string>
+    <string name="remove_quick_contact">Remove Quick Contact</string>
+
+    <!-- The call screens. -->
+    <string name="my_number">My number: %1$s</string>
+    <string name="unknown_caller">Unknown Caller</string>
+    <string name="answer_call">Answer</string>
+    <string name="decline_call">Decline</string>
+    <string name="silence_ringer">Silence ringer</string>
+    <string name="call_speaker">Speaker</string>
+    <string name="call_mute">Mute</string>
+    <string name="call_record">Record</string>
+    <string name="call_note">Call Note</string>
+    <string name="call_note_hint">Write a note about this call</string>
+    <string name="hide_dial_pad">Hide dial pad</string>
+    <string name="call_add">Add a Call</string>
+    <string name="end_call">End Call</string>
+    <string name="call_again">Call Again</string>
+    <!-- Phone Settings. -->
+    <string name="setting_title">Phone Settings</string>
+    <string name="about">About</string>
+    <string name="about_made_by">Made with ❤️ by duc1607</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_github">GitHub</string>
+    <string name="setting_display">Display</string>
+    <string name="display_theme">Theme</string>
+    <string name="display_accent">Accent Color</string>
+    <string-array name="accent_names">
+        <item>Blue</item>
+        <item>Teal</item>
+        <item>Green</item>
+        <item>Orange</item>
+        <item>Red</item>
+        <item>Purple</item>
+    </string-array>
+    <string-array name="theme_modes">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>Follow System</item>
+    </string-array>
+    <string name="display_slider">Show the Answer Slider</string>
+    <string name="display_slider_note">When turned off, answer with the Call key or from the notification.</string>
+    <string name="display_end_button">Show the End Call Button</string>
+    <string name="display_numbers">Show Numbers of Saved Contacts</string>
+    <string name="display_numbers_note">In quick contacts, the call list and the call screens. Numbers that are not saved always show in full.</string>
+    <string name="setting_notifications">Notifications</string>
+    <string name="setting_silence_ringer">Silence Ringer</string>
+    <string name="setting_bluetooth">Bluetooth</string>
+    <string name="setting_forwarding">Call Forwarding</string>
+    <string name="setting_waiting">Call Waiting</string>
+    <string name="setting_blocking">Call Blocking</string>
+    <string name="setting_show_number">Show My Number</string>
+    <string name="setting_reply_now">Reply Now</string>
+    <string name="setting_smart_dialing">Smart Dialing</string>
+    <string name="setting_fixed_dialing">Fixed Dialing Numbers</string>
+    <string name="setting_summary">Call Summary</string>
+    <string name="setting_hearing_aid">Hearing Aid Mode</string>
+    <string name="setting_tty">TTY</string>
+    <string name="setting_blacklist">Blacklist</string>
+    <string name="setting_advanced">Advanced</string>
+    <string name="advanced_proximity">Turn Off the Screen Against the Ear</string>
+    <string name="advanced_device">Device</string>
+    <string-array name="phone_models">
+        <item>Generic</item>
+        <item>Q25</item>
+        <item>P26</item>
+    </string-array>
+    <string name="advanced_background">Running in the Background</string>
+    <string name="advanced_battery">Ignore Battery Optimization</string>
+    <string name="advanced_allow_background">Allow Background Activity</string>
+    <string name="advanced_full_screen">Show Calls Full Screen</string>
+    <string name="advanced_recording">Call Recording</string>
+    <string name="advanced_recording_toggle">Allow Recording Calls</string>
+    <string name="root_request">Request Root Access</string>
+    <string name="root_granted">Root access granted</string>
+    <string name="root_refused">Root access was not granted</string>
+    <string name="root_missing">This phone is not rooted</string>
+    <string name="root_unknown">Recording takes root. Without it, the call screen has no Record button.</string>
+    <string name="recording_auto">Automatically Record When a Call Connects</string>
+    <string name="restart_title">Restart Now?</string>
+    <string name="restart_confirm">Restart</string>
+    <string name="pause_recording">Pause</string>
+    <string name="recording_position">Playback position</string>
+    <string name="line_install">Record the Phone Line</string>
+    <string name="line_remove">Remove Line Recording</string>
+    <string name="line_missing">Recording uses the microphone, so the other person may be hard to hear. Install the module to record the phone line itself.</string>
+    <string name="line_restart">Module installed. Restart the phone to apply it.</string>
+    <string name="line_active">The app may now record the phone line. Listen to a recording to check: not every phone passes the sound on.</string>
+    <string name="line_removing">The module is removed at the next restart.</string>
+    <string name="line_unsupported">Neither Magisk nor KernelSU was found.</string>
+    <string name="line_failed">That did not work.</string>
+    <string name="blacklist_hint">Number or prefix</string>
+    <string name="blacklist_add">Add</string>
+    <string name="blacklist_note">Incoming calls from numbers starting with these are turned away without ringing.</string>
+    <string name="blacklist_empty">No numbers yet</string>
+    <string name="hac_title">HAC Settings</string>
+    <string name="settings_unknown">Unknown</string>
+    <string name="settings_loading">Loading…</string>
+    <string name="settings_sim">SIM</string>
+    <string name="settings_open_system">Open Phone\'s Settings</string>
+    <string name="settings_network_failed">The network didn\'t answer, so this can\'t be changed here. The phone\'s own settings may still work.</string>
+    <string name="notifications_all">All Notifications</string>
+    <string name="notifications_sound">Sound</string>
+    <string name="notifications_ringtone">Ringtone: %1$s</string>
+    <string name="notifications_ringtone_sim2">SIM 2 Ringtone: %1$s</string>
+    <string name="notifications_override">Override Profile Volume</string>
+    <string name="notifications_vibrate">Vibrate</string>
+    <string name="notifications_led">LED</string>
+    <string name="notifications_led_color">LED Color</string>
+    <string name="notifications_led_note">The LED lights up for missed calls, on phones that have one.</string>
+    <string name="notifications_reset">Reset to Default</string>
+    <string-array name="led_colors">
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>White</item>
+    </string-array>
+    <string name="silence_tap">Silence the Ringer by Tapping Anywhere on the Screen</string>
+    <string name="silence_tap_note">When turned on, tap anywhere on the screen to silence the ringer when you receive a call. When turned off, tap the Silence Ringer icon.</string>
+    <string name="voicemail_access">Access Number</string>
+    <string name="voicemail_access_hint">Edit Access Number</string>
+    <string name="voicemail_note">When empty, the Calls tab shows another quick contact instead of Voicemail.</string>
+    <string name="voicemail_password_note">Your voicemail password is changed by calling your voicemail.</string>
+    <string name="bt_answer">Automatically Answer a Call When Connected to a Headset</string>
+    <string name="bt_answer_note">When turned on, your call will automatically be answered after 5 seconds. Change more headset options from your device\'s Bluetooth settings.</string>
+    <string name="forward_all">Forward All Calls</string>
+    <string name="forward_busy">Forward If Busy</string>
+    <string name="forward_unreachable">Forward If Not Reachable</string>
+    <string name="forward_no_reply">Forward If No Reply</string>
+    <string name="forward_to">Forward to</string>
+    <string name="waiting_label">Call Waiting</string>
+    <string name="waiting_note">When turned on, you are told about another call during a call.</string>
+    <string name="block_incoming">Incoming Calls</string>
+    <string name="block_outgoing">Outgoing Calls</string>
+    <string name="block_all">Block All</string>
+    <string name="block_roaming">Block All While Roaming</string>
+    <string name="block_international">Block All International</string>
+    <string name="block_international_roaming">Block All International While Roaming</string>
+    <string name="block_change_password">Change Password</string>
+    <string name="block_password">Call blocking password</string>
+    <string name="block_password_old">Current password</string>
+    <string name="block_password_new">New password</string>
+    <string name="show_number_label">Allow My Number To Appear When Calling</string>
+    <string name="reply_now_note">When turned on, you can send a message to the caller when you ignore an incoming phone call. To edit a default message, tap the message below and type your new message.</string>
+    <string name="reply_now_messages">Reply Now Messages</string>
+    <string name="smart_country">Country Code</string>
+    <string name="smart_area">Area Code</string>
+    <string name="smart_area_hint">Set Area Code</string>
+    <string name="smart_national">National Number Length</string>
+    <string name="smart_note">Enter locale information to have your phone automatically apply correct regional prefixes to phone numbers.</string>
+    <string name="smart_extension">Office Extension Access Number</string>
+    <string name="smart_extension_hint">Set your Extension Access number</string>
+    <string name="smart_pause">Pause After Dialing</string>
+    <string name="smart_seconds">%1$d Seconds</string>
+    <string name="smart_extension_length">Extension Length</string>
+    <string name="smart_reset">Reset</string>
+    <string name="fdn_note">Android keeps this setting and the list for itself: they need your SIM\'s PIN2.</string>
+    <string name="summary_total">Total Call Time</string>
+    <string name="summary_all">All Numbers</string>
+    <string name="summary_phone">Phone</string>
+    <string name="summary_since">Since %1$s</string>
+    <string name="summary_reset">Reset</string>
+    <string name="hac_note">Turn on hearing aid mode to improve compatibility with some hearing aid devices. Android keeps this setting for itself.</string>
+    <string name="tty_note">Turn on TTY to use your phone with a teletypewriter. Android keeps this setting for itself.</string>
+    <string name="no_sim">No SIM</string>
+    <string name="own_number_unknown">Unknown Number</string>
+    <string name="unknown_carrier">Unknown carrier</string>
+    <string name="sim_carrier">SIM %1$d: %2$s</string>
+    <string name="recordings">Recordings</string>
+    <string name="play_recording">Play recording</string>
+    <string name="block">Block</string>
+    <string name="unblock">Unblock</string>
+    <string name="sim_label">SIM %1$d</string>
+    <string name="choose_sim">Call with</string>
+    <string name="route_title">Audio output</string>
+    <string name="route_earpiece">Phone</string>
+    <string name="route_headset">Headset</string>
+    <string name="post_dial_title">Send these tones?</string>
+    <string name="post_dial_send">Send</string>
+    <string name="reply_later">I\'ll call you back later.</string>
+    <string name="reply_busy">Can\'t talk now.</string>
+    <string name="reply_call_me">I\'m on my way.</string>
+    <string name="reply_write">Write your own…</string>
+    <string name="conference_call">Conference (%1$d)</string>
+    <string name="conference_members">People on this call</string>
+    <string name="conference_separate">Talk privately to %1$s</string>
+    <string name="conference_hang_up">Hang up on %1$s</string>
+    <string name="call_held">On hold: %1$s</string>
+    <string name="swap_calls">Swap</string>
+    <string name="merge_calls">Merge Calls</string>
+    <string name="resume_call">Resume</string>
+    <string name="end_and_answer">End current call and answer</string>
+    <string name="call_in_progress_with">On a call with %1$s</string>
+    <string name="return_to_call">Return to call</string>
+    <string name="record_failed">This call can\'t be recorded on this phone</string>
+    <string name="call_permission">Allow phone access to make calls</string>
+    <string name="set_default_app">Set as Default Phone App</string>
+    <string name="channel_incoming">Incoming calls</string>
+    <string name="channel_incoming_quiet">Incoming calls on screen</string>
+    <string name="channel_ongoing">Current call</string>
+    <string name="channel_missed">Missed calls</string>
+    <string name="missed_calls">%1$d missed calls</string>
+    <string name="call_status_on_hold">On hold</string>
+    <string name="call_status_dialing">Calling…</string>
+    <string name="call_status_busy">Busy</string>
+    <string name="call_status_unreachable">Can\'t be reached</string>
+</resources>

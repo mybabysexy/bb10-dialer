@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <!-- "Clear All Call Logs" in the Calls menu. -->
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- New Contact, Edit, Favorite and Delete. -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+
+    <!-- Placing and handling calls. -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Advanced settings: asking to be left out of battery optimization. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- The names of Bluetooth headsets in the audio output list. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <!-- Record in the call screen. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <!-- The phone line itself. Only ever granted through the module in Advanced settings. -->
+    <uses-permission
+        android:name="android.permission.CAPTURE_AUDIO_OUTPUT"
+        tools:ignore="ProtectedPermissions" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.BB10Dialer">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="keyboard|keyboardHidden|navigation"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- What the phone role asks of a dialer. Numbers open on the pad, ready to call. -->
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="tel" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.DIAL" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tel" />
+            </intent-filter>
+        </activity>
+        <!-- Its own task, so that a call does not bring the rest of the app over the lock screen. -->
+        <activity
+            android:name=".CallActivity"
+            android:exported="false"
+            android:directBootAware="true"
+            android:launchMode="singleInstance"
+            android:taskAffinity=".call"
+            android:excludeFromRecents="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:configChanges="keyboard|keyboardHidden|navigation"
+            android:windowSoftInputMode="adjustResize" />
+        <service
+            android:name=".telecom.CallService"
+            android:directBootAware="true"
+            android:exported="true"
+            android:foregroundServiceType="phoneCall|microphone"
+            android:permission="android.permission.BIND_INCALL_SERVICE">
+            <meta-data android:name="android.telecom.IN_CALL_SERVICE_UI" android:value="true" />
+            <meta-data android:name="android.telecom.IN_CALL_SERVICE_RINGING" android:value="true" />
+            <intent-filter>
+                <action android:name="android.telecom.InCallService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".telecom.BlacklistService"
+            android:directBootAware="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_SCREENING_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.CallScreeningService" />
+            </intent-filter>
+        </service>
+        <receiver
+            android:name=".telecom.CallActionReceiver"
+            android:directBootAware="true"
+            android:exported="false" />
+        <receiver
+            android:name=".telecom.MissedCallReceiver"
+            android:exported="true"
+            android:permission="android.permission.MODIFY_PHONE_STATE">
+            <intent-filter>
+                <action android:name="android.telecom.action.SHOW_MISSED_CALLS_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
