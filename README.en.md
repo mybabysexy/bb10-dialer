@@ -33,7 +33,7 @@ The data in these pictures is made up.
 - Call recording, with seeking, under that call in the history. **Requires root**, see [Call recording](#call-recording).
 
 **Contacts and history**
-- Call history by day, quick contacts, and a dial pad that suggests matches as you type.
+- Call history by day, speed dial, and a dial pad that suggests matches as you type.
 - View, add, edit and delete contacts.
 - Pull down at the top of a list to see each SIM's number and carrier.
 

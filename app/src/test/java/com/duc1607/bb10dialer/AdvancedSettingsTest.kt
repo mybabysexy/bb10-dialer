@@ -3,6 +3,12 @@ package com.duc1607.bb10dialer
 import android.view.KeyEvent
 import com.duc1607.bb10dialer.data.CallEntry
 import com.duc1607.bb10dialer.data.CallKind
+import com.duc1607.bb10dialer.data.freeQuickSlot
+import com.duc1607.bb10dialer.data.contactSections
+import com.duc1607.bb10dialer.data.searchContacts
+import com.duc1607.bb10dialer.data.phoneticOf
+import com.duc1607.bb10dialer.data.Phonetic
+import com.duc1607.bb10dialer.data.Contact
 import com.duc1607.bb10dialer.data.CallNote
 import com.duc1607.bb10dialer.data.NumberForms
 import com.duc1607.bb10dialer.data.PhoneModel
@@ -129,6 +135,35 @@ class AdvancedSettingsTest {
         assertEquals(1, sampleSizeFor(720, 361))
         assertEquals(1, sampleSizeFor(96, 360))
         assertEquals(4, sampleSizeFor(1600, 360))
+    }
+
+    private val pinyin = mapOf("张" to "zhāng", "三" to "sān", "李" to "lǐ", "小" to "xiǎo", "龙" to "lóng")
+    private fun chinese(id: Long, name: String) = Contact(id, name, emptyList(), phonetic = phoneticOf(name) { pinyin[it].orEmpty() })
+
+    @Test
+    fun `a Chinese name is spelled in letters, syllable by syllable`() {
+        assertEquals(Phonetic("zhangsan", "zs"), phoneticOf("张三") { pinyin[it].orEmpty() })
+        assertEquals(Phonetic("lixiaolongbruce", "lxlb"), phoneticOf("李小龙 Bruce") { pinyin[it].orEmpty() })
+        assertNull(phoneticOf("Lương Minh Đức") { pinyin[it].orEmpty() })
+    }
+
+    @Test
+    fun `a Chinese name is found by its letters and listed under them`() {
+        val contacts = listOf(chinese(1, "张三"), chinese(2, "李小龙"), Contact(3, "Anna", emptyList()))
+        assertEquals(listOf(1L), searchContacts(contacts, "zs").map { it.id })
+        assertEquals(listOf(1L), searchContacts(contacts, "zhang").map { it.id })
+        assertEquals(listOf(2L), searchContacts(contacts, "xiao long").map { it.id })
+        assertEquals(listOf(2L), searchContacts(contacts, "lxl").map { it.id })
+        assertEquals(listOf(1L), searchContacts(contacts, "张").map { it.id })
+        assertEquals(listOf("A", "L", "Z"), contactSections(contacts).map { it.title })
+    }
+
+    @Test
+    fun `a speed dial goes in the first free tile, once`() {
+        assertEquals(1, freeQuickSlot(listOf("0901", null, null, null), 4, "0902"))
+        assertEquals(null, freeQuickSlot(listOf("0901", null, null, null), 4, "0901"))
+        assertEquals(-1, freeQuickSlot(listOf("0901", "0902", "0903", null), 3, "0904"))
+        assertEquals(3, freeQuickSlot(listOf("0901", "0902", "0903", null), 4, "0904"))
     }
 
     @Test

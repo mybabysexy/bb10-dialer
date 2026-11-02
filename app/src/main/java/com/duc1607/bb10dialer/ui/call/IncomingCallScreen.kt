@@ -59,6 +59,8 @@ fun IncomingCallScreen(
     onEndAndAnswer: (() -> Unit)? = null,
     /** Off in Phone Settings: answering is left to the Call key and the notification. */
     showSlider: Boolean = true,
+    /** The slider the other way round, and the actions over its ends with it. */
+    answerOnRight: Boolean = false,
 ) {
     val c = Bb10.colors
     val d = Bb10.dimens
@@ -105,7 +107,7 @@ fun IncomingCallScreen(
                         SideAction(
                             DialerIcons.HangUp,
                             stringResource(R.string.end_and_answer),
-                            modifier = Modifier.align(Alignment.CenterStart),
+                            modifier = Modifier.align(if (answerOnRight) Alignment.CenterEnd else Alignment.CenterStart),
                             onClick = onEndAndAnswer,
                         )
                     }
@@ -120,14 +122,14 @@ fun IncomingCallScreen(
                         SideAction(
                             DialerIcons.Message,
                             stringResource(R.string.action_sms),
-                            modifier = Modifier.align(Alignment.CenterEnd),
+                            modifier = Modifier.align(if (answerOnRight) Alignment.CenterStart else Alignment.CenterEnd),
                             onClick = onSms,
                         )
                     }
                 }
                 if (showSlider) {
                     Spacer(Modifier.height(SideActionGap))
-                    AnswerSlider(onAnswer, onDecline, Modifier.widthIn(max = PanelContentWidth))
+                    AnswerSlider(onAnswer, onDecline, Modifier.widthIn(max = PanelContentWidth), answerOnRight)
                 }
             }
         },

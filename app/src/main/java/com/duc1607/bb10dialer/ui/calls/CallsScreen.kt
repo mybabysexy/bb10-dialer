@@ -29,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -56,6 +57,7 @@ import com.duc1607.bb10dialer.ui.common.CellDivider
 import com.duc1607.bb10dialer.ui.common.EmptyMessage
 import com.duc1607.bb10dialer.ui.common.LocalTabs
 import com.duc1607.bb10dialer.ui.common.SectionHeader
+import com.duc1607.bb10dialer.ui.common.isDelete
 import com.duc1607.bb10dialer.ui.common.onCallKey
 import com.duc1607.bb10dialer.ui.theme.DialerColors
 import com.duc1607.bb10dialer.ui.theme.DialerIcons
@@ -126,8 +128,13 @@ fun CallsScreen(
     listState: LazyListState,
     actions: DialerActions,
     onPickQuick: (Int) -> Unit,
+    /** Holding a speed dial, or Menu on it: picks it for the menu ([LocalBb10Menu]). */
     onQuickMenu: (Int) -> Unit,
     onDetails: (String) -> Unit,
+    /** Holding a row, or Menu on it: picks it for the menu ([LocalBb10Menu]). */
+    onCallMenu: (CallGroup) -> Unit,
+    /** Del on a row. */
+    onDeleteCall: (CallGroup) -> Unit,
     onAllowAccess: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -176,6 +183,8 @@ fun CallsScreen(
                     onCall = { actions.call(group.latest.number) },
                     onInfo = { onDetails(group.latest.number) },
                     onSms = { actions.sms(group.latest.number) },
+                    onMenu = { onCallMenu(group) },
+                    onDelete = { onDeleteCall(group) },
                 )
             }
         }
@@ -238,7 +247,7 @@ private fun QuickActions(
                 showNumbers = showNumbers,
                 modifier = Modifier.weight(1f),
                 onClick = { if (number != null) actions.call(number) else onPick(slot) },
-                onLongClick = if (number != null) ({ onMenu(slot) }) else null,
+                onMenu = if (number != null) ({ onMenu(slot) }) else null,
             )
         }
     }
@@ -252,7 +261,7 @@ private fun QuickContactTile(
     showNumbers: Boolean,
     modifier: Modifier,
     onClick: () -> Unit,
-    onLongClick: (() -> Unit)?,
+    onMenu: (() -> Unit)?,
 ) {
     val c = Bb10.colors
     val d = Bb10.dimens
@@ -263,7 +272,7 @@ private fun QuickContactTile(
     Avatar(
         modifier
             .aspectRatio(1f)
-            .bb10Clickable(role = Role.Button, onLongClick = onLongClick, onClick = onClick),
+            .bb10Clickable(role = Role.Button, onMenu = onMenu, onClick = onClick),
         photo,
         photoSide = side,
     ) {
@@ -312,6 +321,8 @@ private fun CallRow(
     onCall: () -> Unit,
     onInfo: () -> Unit,
     onSms: () -> Unit,
+    onMenu: () -> Unit,
+    onDelete: () -> Unit,
 ) {
     val c = Bb10.colors
     val d = Bb10.dimens
@@ -323,7 +334,13 @@ private fun CallRow(
     Column(
         Modifier
             .fillMaxWidth()
-            .onCallKey(context) { if (call.number.isNotEmpty()) onCall() },
+            .onCallKey(context) { if (call.number.isNotEmpty()) onCall() }
+            .onKeyEvent { e ->
+                if (e.isDelete()) {
+                    onDelete()
+                    true
+                } else false
+            },
     ) {
         Row(
             // The list's own background shows through: painting it again for each row costs a lot.
@@ -337,7 +354,7 @@ private fun CallRow(
                 Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .bb10Clickable(role = Role.Button, highlight = highlight, flat = true, onClick = onCall),
+                    .bb10Clickable(role = Role.Button, highlight = highlight, flat = true, onMenu = onMenu, onClick = onCall),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Avatar(Modifier.size(rowHeight), text.photo)

@@ -236,6 +236,7 @@ fun ContactEditorScreen(
         if (uri != null) form.photoUri = uri.toString()
     }
     val failed = stringResource(R.string.save_failed)
+    val failedBecause = stringResource(R.string.save_failed_because)
 
     fun save() {
         busy = true
@@ -248,9 +249,12 @@ fun ContactEditorScreen(
             favorite = form.favorite,
             photoUri = form.photoUri,
         )
-        viewModel.saveContact(draft) { id ->
+        viewModel.saveContact(draft) { result ->
             busy = false
-            if (id != null) onSaved(id) else Toast.makeText(context, failed, Toast.LENGTH_SHORT).show()
+            result
+                .onSuccess(onSaved)
+                // What went wrong, for the user to pass on: phones differ in how they refuse.
+                .onFailure { Toast.makeText(context, failedBecause.format(it.javaClass.simpleName), Toast.LENGTH_LONG).show() }
         }
     }
 

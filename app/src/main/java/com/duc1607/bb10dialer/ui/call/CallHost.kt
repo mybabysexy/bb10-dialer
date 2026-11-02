@@ -115,6 +115,7 @@ private fun Incoming(ringing: LiveCall, state: CallCenterState) {
         onEndAndAnswer = if (other != null) ({ CallCenter.endAndAnswer(ringing.id) }) else null,
         onDecline = { CallCenter.decline(ringing.id) },
         showSlider = settings.showAnswerSlider,
+        answerOnRight = settings.answerOnRight,
     )
     if (replying) {
         ReplyDialog(

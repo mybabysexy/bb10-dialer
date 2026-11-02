@@ -1,5 +1,12 @@
 package com.duc1607.bb10dialer.ui
 
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
+import com.duc1607.bb10dialer.data.CallGroup
+import com.duc1607.bb10dialer.data.Contact
+import com.duc1607.bb10dialer.data.QUICK_CONTACT_SLOTS
+import com.duc1607.bb10dialer.data.freeQuickSlot
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +35,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
@@ -64,6 +72,9 @@ import com.duc1607.bb10dialer.ui.settings.SettingPageScreen
 import com.duc1607.bb10dialer.ui.theme.DialerColors
 import com.duc1607.bb10dialer.ui.theme.DialerIcons
 import duc1607.bb10.designsystem.components.Bb10Dialog
+import duc1607.bb10.designsystem.components.Bb10MenuController
+import duc1607.bb10.designsystem.components.Bb10MenuHold
+import duc1607.bb10.designsystem.components.LocalBb10Menu
 import duc1607.bb10.designsystem.components.Bb10Icon
 import duc1607.bb10.designsystem.components.Bb10PushHost
 import duc1607.bb10.designsystem.components.Bb10Text
@@ -123,6 +134,15 @@ fun DialerApp(
     var menuOpen by rememberSaveable { mutableStateOf(false) }
     // Which quick contact the menu is about, when it was opened by holding one.
     var quickMenuSlot by rememberSaveable { mutableStateOf<Int?>(null) }
+    // Which call the menu is about, when it was opened by holding a row.
+    var callMenu by remember { mutableStateOf<CallGroup?>(null) }
+    // Which contact the menu is about, when it was opened by holding one.
+    var contactMenu by remember { mutableStateOf<Contact?>(null) }
+    // An item is still held: the menu about it only peeks in, and the finger may pick an entry.
+    var menuPeek by remember { mutableStateOf(false) }
+    val hold = remember { Bb10MenuHold() }
+    var confirmDeleteCall by remember { mutableStateOf<CallGroup?>(null) }
+    var confirmDeleteContact by remember { mutableStateOf<Contact?>(null) }
     var confirmClear by rememberSaveable { mutableStateOf(false) }
     // Bumped when the menu closes, so the tab can take its focus back.
     var refocus by remember { mutableIntStateOf(0) }
@@ -151,12 +171,23 @@ fun DialerApp(
 
     fun closeMenu() {
         menuOpen = false
+        menuPeek = false
         refocus++
     }
 
     fun openMenu() {
         quickMenuSlot = null
+        callMenu = null
+        contactMenu = null
         menuOpen = true
+    }
+
+    /** An item was held, or Menu pressed on it: [pick] says which, for the menu about it. */
+    fun pickForMenu(pick: () -> Unit) {
+        quickMenuSlot = null
+        callMenu = null
+        contactMenu = null
+        pick()
     }
 
     fun push(route: Route) {
@@ -192,11 +223,87 @@ fun DialerApp(
         )
         else -> listOf(changeLine, settings)
     }
-    val quickMenu = listOf(
-        MenuEntry(stringResource(R.string.remove_quick_contact), Bb10Icons.Delete) {
-            quickMenuSlot?.let { viewModel.setQuickContact(it, null) }
-        },
-    )
+    val clipboard = LocalClipboardManager.current
+    fun toast(text: Int) = Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    fun addSpeedDial(number: String) {
+        val shown = if (phoneSettings.voicemailNumber.isNotEmpty()) QUICK_CONTACT_SLOTS - 1 else QUICK_CONTACT_SLOTS
+        when (val slot = freeQuickSlot(state.quick, shown, number)) {
+            null -> toast(R.string.speed_dial_exists)
+            -1 -> toast(R.string.speed_dial_full)
+            else -> {
+                viewModel.setQuickContact(slot, number)
+                toast(R.string.speed_dial_added)
+            }
+        }
+    }
+    val callMenuEntries = callMenu?.let { group ->
+        val number = group.latest.number
+        val known = number.isNotEmpty()
+        val saved = index.find(number) != null
+        listOf(
+            MenuEntry(stringResource(R.string.view_call_details), Bb10Icons.Info, enabled = known) { push(Route.CallDetails(number)) },
+            MenuEntry(stringResource(R.string.copy_number), DialerIcons.Copy, enabled = known) { clipboard.setText(AnnotatedString(number)) },
+            MenuEntry(stringResource(R.string.action_sms), DialerIcons.Message, enabled = known) { actions.sms(number) },
+            MenuEntry(stringResource(R.string.add_to_contacts), DialerIcons.AddContact, enabled = known && !saved) {
+                push(Route.Editor(number = number))
+            },
+            MenuEntry(stringResource(R.string.add_speed_dial), DialerIcons.Star, enabled = known) { addSpeedDial(number) },
+            MenuEntry(stringResource(R.string.delete), Bb10Icons.Delete, shortcut = Key.Delete, destructive = true) {
+                confirmDeleteCall = group
+            },
+        )
+    }
+    val quickMenuEntries = quickMenuSlot?.let { slot ->
+        val number = state.quick.getOrNull(slot).orEmpty()
+        val contact = index.find(number)?.first
+        listOf(
+            MenuEntry(stringResource(R.string.view_contact_details), DialerIcons.ContactCard, enabled = contact != null) {
+                contact?.let { push(Route.Card(it.id)) }
+            },
+            MenuEntry(stringResource(R.string.copy_number), DialerIcons.Copy) { clipboard.setText(AnnotatedString(number)) },
+            MenuEntry(stringResource(R.string.action_sms), DialerIcons.Message) { actions.sms(number) },
+            MenuEntry(stringResource(R.string.remove_quick_contact), Bb10Icons.Delete, destructive = true) {
+                viewModel.setQuickContact(slot, null)
+            },
+        )
+    }
+    val contactMenuEntries = contactMenu?.let { contact ->
+        val number = contact.numbers.firstOrNull()?.number
+        listOf(
+            MenuEntry(stringResource(R.string.action_call), DialerIcons.Phone, enabled = number != null) {
+                number?.let { actions.call(it) }
+            },
+            MenuEntry(stringResource(R.string.action_sms), DialerIcons.Message, enabled = number != null) {
+                number?.let { actions.sms(it) }
+            },
+            MenuEntry(stringResource(R.string.add_speed_dial), DialerIcons.Star, enabled = number != null) {
+                number?.let { addSpeedDial(it) }
+            },
+            MenuEntry(stringResource(R.string.view_contact_details), DialerIcons.ContactCard) { push(Route.Card(contact.id)) },
+            MenuEntry(stringResource(R.string.delete), Bb10Icons.Delete, shortcut = Key.Delete, destructive = true) {
+                confirmDeleteContact = contact
+            },
+        )
+    }
+    val itemMenuEntries = callMenuEntries ?: quickMenuEntries ?: contactMenuEntries
+    // Holding a row peeks the menu in; letting go on one of its icons runs that entry, elsewhere
+    // opens the menu fully.
+    val itemMenu = remember {
+        Bb10MenuController(
+            peek = { menuPeek = true },
+            open = { menuOpen = true },
+            move = hold::move,
+            release = {
+                val picked = hold.end()
+                if (picked != null && !menuOpen) {
+                    closeMenu()
+                    picked.onClick()
+                } else {
+                    menuOpen = true
+                }
+            },
+        )
+    }
 
     Box(
         Modifier
@@ -227,7 +334,7 @@ fun DialerApp(
                 ) {
                     Column(Modifier.fillMaxSize()) {
                         Box(Modifier.weight(1f).fillMaxWidth()) {
-                            tabs.SaveableStateProvider(tab) {
+                            tabs.SaveableStateProvider(tab) { CompositionLocalProvider(LocalBb10Menu provides itemMenu) {
                                 when (tab) {
                                     TAB_CALLS -> PullDownHeader(header = { SimHeader(state.simLines) }) {
                                         CallsScreen(
@@ -243,11 +350,10 @@ fun DialerApp(
                                             listState = callsList,
                                             actions = actions,
                                             onPickQuick = { push(Route.PickQuick(it)) },
-                                            onQuickMenu = {
-                                                quickMenuSlot = it
-                                                menuOpen = true
-                                            },
+                                            onQuickMenu = { slot -> pickForMenu { quickMenuSlot = slot } },
                                             onDetails = { push(Route.CallDetails(it)) },
+                                            onCallMenu = { group -> pickForMenu { callMenu = group } },
+                                            onDeleteCall = { confirmDeleteCall = it },
                                             onAllowAccess = onAllowAccess,
                                         )
                                     }
@@ -258,6 +364,8 @@ fun DialerApp(
                                         refocus = refocus,
                                         actions = actions,
                                         onOpenCard = { push(Route.Card(it)) },
+                                        onContactMenu = { contact -> pickForMenu { contactMenu = contact } },
+                                        onDeleteContact = { confirmDeleteContact = it },
                                         onAllowAccess = onAllowAccess,
                                     )
                                     else -> DialPadScreen(
@@ -271,7 +379,7 @@ fun DialerApp(
                                         onAddContact = { push(Route.Editor(number = it)) },
                                     )
                                 }
-                            }
+                            } }
                         }
                         DialerTabBar(
                             selected = tab,
@@ -281,9 +389,38 @@ fun DialerApp(
                     }
                     ActionMenu(
                         open = menuOpen,
-                        entries = if (quickMenuSlot != null) quickMenu else menu,
+                        peek = menuPeek,
+                        dim = itemMenuEntries != null,
+                        hold = hold,
+                        entries = itemMenuEntries ?: menu,
                         onDismiss = ::closeMenu,
                     )
+                    confirmDeleteCall?.let { group ->
+                        Bb10Dialog(
+                            title = stringResource(R.string.delete_call_title),
+                            message = stringResource(R.string.delete_call_message),
+                            confirmText = stringResource(R.string.delete),
+                            dismissText = stringResource(R.string.cancel),
+                            onConfirm = {
+                                confirmDeleteCall = null
+                                viewModel.deleteCalls(group.entries.map { it.id })
+                            },
+                            onDismiss = { confirmDeleteCall = null },
+                        )
+                    }
+                    confirmDeleteContact?.let { contact ->
+                        Bb10Dialog(
+                            title = stringResource(R.string.delete_contact_title),
+                            message = stringResource(R.string.delete_contact_message),
+                            confirmText = stringResource(R.string.delete),
+                            dismissText = stringResource(R.string.cancel),
+                            onConfirm = {
+                                confirmDeleteContact = null
+                                viewModel.deleteContact(contact.id) { done -> if (!done) toast(R.string.save_failed) }
+                            },
+                            onDismiss = { confirmDeleteContact = null },
+                        )
+                    }
                     if (confirmClear) {
                         Bb10Dialog(
                             title = stringResource(R.string.clear_calls_title),
@@ -318,6 +455,9 @@ fun DialerApp(
                         loadData = viewModel::contactData,
                         actions = actions,
                         onEdit = { push(Route.Editor(contactId = route.contactId)) },
+                        onDelete = {
+                            viewModel.deleteContact(route.contactId) { done -> if (!done) toast(R.string.save_failed) }
+                        },
                         // A card whose contact was deleted closes itself from under the form.
                         onBack = { pages = pages - route },
                     )

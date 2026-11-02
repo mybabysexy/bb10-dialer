@@ -56,6 +56,8 @@ fun PageBar(
     action: PageBarAction? = null,
     /** To the left of the circle. */
     startAction: PageBarAction? = null,
+    /** The menu of the page, at the right end. */
+    onMore: (() -> Unit)? = null,
 ) {
     val d = Bb10.dimens
     // The slash leans out of a square, so the bottom edge is as long as the bar is tall.
@@ -77,8 +79,24 @@ fun PageBar(
             Row(Modifier.weight(1f)) {
                 if (action != null) BarAction(action)
             }
-            Spacer(Modifier.width(backWidth))
+            if (onMore != null) MoreButton(backWidth, onMore) else Spacer(Modifier.width(backWidth))
         }
+    }
+}
+
+@Composable
+private fun MoreButton(width: Dp, onClick: () -> Unit) {
+    val highlight = rememberBb10Highlight()
+    val label = Bb10.strings.moreActions
+    Box(
+        Modifier
+            .width(width)
+            .height(Bb10.dimens.actionBarHeight)
+            .semantics { contentDescription = label }
+            .bb10Clickable(role = Role.Button, highlight = highlight, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Bb10OnHighlight(highlight) { Bb10Icon(Bb10Icons.More, size = ActionIconSize) }
     }
 }
 

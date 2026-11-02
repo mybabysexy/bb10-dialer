@@ -3,6 +3,23 @@ package com.duc1607.bb10dialer.ui.contacts
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import duc1607.bb10.designsystem.components.Bb10Dialog
+import com.duc1607.bb10dialer.ui.common.MenuEntry
+import com.duc1607.bb10dialer.ui.common.ActionMenu
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.runtime.withFrameNanos
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -89,6 +106,8 @@ fun ContactCardScreen(
     loadData: suspend (Long) -> ContactData?,
     actions: DialerActions,
     onEdit: () -> Unit,
+    /** After the user said yes. */
+    onDelete: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -100,8 +119,36 @@ fun ContactCardScreen(
 
     val data by produceState<ContactData?>(null, contactId, revision) { value = loadData(contactId) }
     var tab by rememberSaveable { mutableIntStateOf(TAB_DETAILS) }
+    var menuOpen by rememberSaveable { mutableStateOf(false) }
+    var confirmDelete by rememberSaveable { mutableStateOf(false) }
+    // The card takes the focus, so that Del and Menu reach it from a hardware keyboard.
+    val focus = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        withFrameNanos { }
+        runCatching { focus.requestFocus() }
+    }
 
-    Column(modifier.fillMaxSize().background(Bb10.colors.background)) {
+    Box(
+        modifier
+            .fillMaxSize()
+            .onKeyEvent { e ->
+                if (e.type != KeyEventType.KeyDown || e.nativeKeyEvent.repeatCount != 0) return@onKeyEvent false
+                when (e.key) {
+                    Key.Backspace, Key.Delete -> {
+                        confirmDelete = true
+                        true
+                    }
+                    Key.Menu -> {
+                        menuOpen = !menuOpen
+                        true
+                    }
+                    else -> false
+                }
+            }
+            .focusRequester(focus)
+            .focusable(),
+    ) {
+    Column(Modifier.fillMaxSize().background(Bb10.colors.background)) {
         CardHeader(contact)
         LocalTabs(
             tabs = listOf(stringResource(R.string.tab_details), stringResource(R.string.tab_activity)),
@@ -121,8 +168,32 @@ fun ContactCardScreen(
                 primary = PageBarAction(Bb10Icons.Edit, stringResource(R.string.action_edit), onClick = onEdit),
                 primaryColor = Bb10.colors.accent,
                 modifier = Modifier.align(Alignment.BottomCenter),
+                onMore = { menuOpen = true },
             )
         }
+    }
+    ActionMenu(
+        open = menuOpen,
+        entries = listOf(
+            MenuEntry(stringResource(R.string.delete), Bb10Icons.Delete, shortcut = Key.Delete, destructive = true) {
+                confirmDelete = true
+            },
+        ),
+        onDismiss = { menuOpen = false },
+    )
+    if (confirmDelete) {
+        Bb10Dialog(
+            title = stringResource(R.string.delete_contact_title),
+            message = stringResource(R.string.delete_contact_message),
+            confirmText = stringResource(R.string.delete),
+            dismissText = stringResource(R.string.cancel),
+            onConfirm = {
+                confirmDelete = false
+                onDelete()
+            },
+            onDismiss = { confirmDelete = false },
+        )
+    }
     }
 }
 
@@ -181,7 +252,7 @@ private fun DetailsTab(contact: Contact, data: ContactData?, actions: DialerActi
     val hasNumbers = contact.numbers.isNotEmpty()
     Bb10LazyColumn(modifier) {
         items(contact.numbers, key = { "call-${it.number}" }) { phone ->
-            CardRow(DialerIcons.Device, null, phone.number, stringResource(R.string.call_type, phone.label)) {
+            CardRow(DialerIcons.Device, null, phone.number, stringResource(R.string.call_type, phone.label), phone.number) {
                 actions.call(phone.number)
             }
         }
@@ -193,13 +264,14 @@ private fun DetailsTab(contact: Contact, data: ContactData?, actions: DialerActi
                     DialerColors.MessageYellow,
                     phone.number,
                     stringResource(R.string.text_type, phone.label),
+                    phone.number,
                 ) { actions.sms(phone.number) }
             }
         }
         if (others.isNotEmpty()) {
             if (hasNumbers) item(key = "gap-others") { GroupGap() }
             items(others, key = { "field-${it.dataId}" }) { field ->
-                CardRow(field.icon(), null, field.mainText(), field.caption(resources), null)
+                CardRow(field.icon(), null, field.mainText(), field.caption(resources), field.mainText(), null)
             }
         }
     }
@@ -229,13 +301,15 @@ private fun GroupGap() {
     Box(Modifier.fillMaxWidth().height(Bb10.dimens.spaceM).background(DialerColors.CardGroupGap))
 }
 
-/** A value over what it is. Rows without [onClick] only inform. */
+/** A value over what it is. Rows without [onClick] only inform. Holding one copies [copy]. */
 @Composable
-private fun CardRow(icon: ImageVector, tint: Color?, title: String, caption: String, onClick: (() -> Unit)?) {
+private fun CardRow(icon: ImageVector, tint: Color?, title: String, caption: String, copy: String, onClick: (() -> Unit)?) {
     val c = Bb10.colors
     val d = Bb10.dimens
     val t = Bb10.typography
     val highlight = rememberBb10Highlight()
+    val clipboard = LocalClipboardManager.current
+    val copyIt = { clipboard.setText(AnnotatedString(copy)) }
     Column(Modifier.fillMaxWidth().background(c.background)) {
         Row(
             Modifier
@@ -243,9 +317,9 @@ private fun CardRow(icon: ImageVector, tint: Color?, title: String, caption: Str
                 .heightIn(min = d.listItemMinHeight)
                 .then(
                     if (onClick != null) {
-                        Modifier.bb10Clickable(role = Role.Button, highlight = highlight, flat = true, onClick = onClick)
+                        Modifier.bb10Clickable(role = Role.Button, highlight = highlight, flat = true, onLongClick = copyIt, onClick = onClick)
                     } else {
-                        Modifier
+                        Modifier.pointerInput(copy) { detectTapGestures(onLongPress = { copyIt() }) }
                     }
                 )
                 .padding(vertical = d.spaceXs),

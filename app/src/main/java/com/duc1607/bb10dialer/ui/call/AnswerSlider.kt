@@ -74,19 +74,21 @@ private const val COMMIT_AT = 0.8f
 private const val ARC_HALF_SWEEP = 68f
 
 /**
- * Answer to the left, decline to the right, by dragging the round thumb; only a drag that starts on
+ * Answer to the left, decline to the right, or the other way round with [answerOnRight], by dragging
+ * the round thumb; only a drag that starts on
  * the thumb counts, so that a phone taken out of a pocket does not answer. Holding the thumb fills
  * its gap like a camera's shutter button, and it turns green or red on the way to either end.
  *
  * It stays at the end once used: give it a new key for the next call.
  */
 @Composable
-internal fun AnswerSlider(onAnswer: () -> Unit, onDecline: () -> Unit, modifier: Modifier = Modifier) {
+internal fun AnswerSlider(onAnswer: () -> Unit, onDecline: () -> Unit, modifier: Modifier = Modifier, answerOnRight: Boolean = false) {
     val answer by rememberUpdatedState(onAnswer)
     val decline by rememberUpdatedState(onDecline)
     val scope = rememberCoroutineScope()
-    // -1 is the answer end, 1 the decline end.
+    // -1 is the answer end, 1 the decline end, wherever they are: [side] puts them on the screen.
     val position = remember { Animatable(0f) }
+    val side = if (answerOnRight) -1f else 1f
     var held by remember { mutableStateOf(false) }
     var done by remember { mutableStateOf(false) }
     val grip = animateFloatAsState(if (held) 1f else 0f, tween(GRIP_MILLIS), label = "grip")
@@ -112,18 +114,18 @@ internal fun AnswerSlider(onAnswer: () -> Unit, onDecline: () -> Unit, modifier:
                     CustomAccessibilityAction(declineLabel) { decline(); true },
                 )
             }
-            .pointerInput(Unit) {
+            .pointerInput(side) {
                 awaitEachGesture {
                     val down = awaitFirstDown()
                     val travel = (size.width - size.height) / 2f
-                    val thumbX = size.width / 2f + position.value * travel
+                    val thumbX = size.width / 2f + position.value * side * travel
                     if (done || abs(down.position.x - thumbX) > size.height / 2f) return@awaitEachGesture
                     down.consume()
                     held = true
                     var moved = position.value * travel
                     try {
                         drag(down.id) { change ->
-                            moved += change.positionChange().x
+                            moved += change.positionChange().x * side
                             change.consume()
                             val target = (moved / travel).coerceIn(-1f, 1f)
                             scope.launch { position.snapTo(target) }
@@ -145,16 +147,16 @@ internal fun AnswerSlider(onAnswer: () -> Unit, onDecline: () -> Unit, modifier:
             },
     ) {
         Canvas(Modifier.fillMaxSize()) {
-            drawTrack(position.value)
-            drawChevrons(wave.value, position.value)
-            drawThumb(position.value, grip.value)
+            drawTrack(position.value, side)
+            drawChevrons(wave.value, position.value, side)
+            drawThumb(position.value, grip.value, side)
         }
         // Over the thumb, which turns the end's colour when it arrives there.
         Bb10Icon(
             DialerIcons.Phone,
             Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = EndIconInset)
+                .align(if (answerOnRight) Alignment.CenterEnd else Alignment.CenterStart)
+                .padding(horizontal = EndIconInset)
                 .alpha(answerSideAlpha(position.value)),
             tint = lerp(DialerColors.AnswerGreen, Color.White, answerProgress),
             size = EndIconSize,
@@ -162,8 +164,8 @@ internal fun AnswerSlider(onAnswer: () -> Unit, onDecline: () -> Unit, modifier:
         Bb10Icon(
             DialerIcons.HangUp,
             Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = EndIconInset)
+                .align(if (answerOnRight) Alignment.CenterStart else Alignment.CenterEnd)
+                .padding(horizontal = EndIconInset)
                 .alpha(declineSideAlpha(position.value)),
             tint = lerp(DialerColors.DeclineRed, Color.White, declineProgress),
             size = EndIconSize,
@@ -175,42 +177,45 @@ internal fun AnswerSlider(onAnswer: () -> Unit, onDecline: () -> Unit, modifier:
 private fun answerSideAlpha(position: Float) = (1f - position * 2f).coerceIn(0f, 1f)
 private fun declineSideAlpha(position: Float) = (1f + position * 2f).coerceIn(0f, 1f)
 
-private fun DrawScope.drawTrack(position: Float) {
+/** [side] is 1 with the answer end on the left, -1 with it on the right. */
+private fun DrawScope.drawTrack(position: Float, side: Float) {
     val radius = size.height / 2
     drawRoundRect(DialerColors.CallTrack, cornerRadius = CornerRadius(radius))
     val inset = ArcWidth.toPx() / 2
     val arcSize = Size(size.height - inset * 2, size.height - inset * 2)
     val stroke = Stroke(ArcWidth.toPx(), cap = StrokeCap.Round)
+    val left = Offset(inset, inset)
+    val right = Offset(size.width - size.height + inset, inset)
     drawArc(
         DialerColors.AnswerGreen.copy(alpha = answerSideAlpha(position)),
-        startAngle = 180f - ARC_HALF_SWEEP,
+        startAngle = if (side > 0) 180f - ARC_HALF_SWEEP else -ARC_HALF_SWEEP,
         sweepAngle = ARC_HALF_SWEEP * 2,
         useCenter = false,
-        topLeft = Offset(inset, inset),
+        topLeft = if (side > 0) left else right,
         size = arcSize,
         style = stroke,
     )
     drawArc(
         DialerColors.DeclineRed.copy(alpha = declineSideAlpha(position)),
-        startAngle = -ARC_HALF_SWEEP,
+        startAngle = if (side > 0) -ARC_HALF_SWEEP else 180f - ARC_HALF_SWEEP,
         sweepAngle = ARC_HALF_SWEEP * 2,
         useCenter = false,
-        topLeft = Offset(size.width - size.height + inset, inset),
+        topLeft = if (side > 0) right else left,
         size = arcSize,
         style = stroke,
     )
 }
 
 /** Three chevrons pointing away from the thumb, lit one after the other from the thumb outwards. */
-private fun DrawScope.drawChevrons(phase: Float, position: Float) {
+private fun DrawScope.drawChevrons(phase: Float, position: Float, side: Float) {
     val middle = size.width / 2
     val first = ThumbRadius.toPx() + ChevronGap.toPx()
     for (i in 0 until CHEVRONS) {
         val age = (phase - i.toFloat() / CHEVRONS + 1f) % 1f
         val alpha = MIN_CHEVRON_ALPHA + (1f - MIN_CHEVRON_ALPHA) * (1f - age)
         val distance = first + i * ChevronStep.toPx()
-        drawChevron(middle - distance, -1f, DialerColors.AnswerGreen.copy(alpha = alpha * answerSideAlpha(position)))
-        drawChevron(middle + distance, 1f, DialerColors.DeclineRed.copy(alpha = alpha * declineSideAlpha(position)))
+        drawChevron(middle - distance * side, -side, DialerColors.AnswerGreen.copy(alpha = alpha * answerSideAlpha(position)))
+        drawChevron(middle + distance * side, side, DialerColors.DeclineRed.copy(alpha = alpha * declineSideAlpha(position)))
     }
 }
 
@@ -225,9 +230,9 @@ private fun DrawScope.drawChevron(x: Float, direction: Float, color: Color) {
     drawLine(color, Offset(tail, y + arm), Offset(x, y), ChevronWidth.toPx(), StrokeCap.Round)
 }
 
-private fun DrawScope.drawThumb(position: Float, grip: Float) {
+private fun DrawScope.drawThumb(position: Float, grip: Float, side: Float) {
     val travel = (size.width - size.height) / 2
-    val center = Offset(size.width / 2 + position * travel, size.height / 2)
+    val center = Offset(size.width / 2 + position * side * travel, size.height / 2)
     val end = if (position < 0) DialerColors.AnswerGreen else DialerColors.DeclineRed
     val color = lerp(Color.White, end, abs(position))
     val outer = ThumbRadius.toPx()

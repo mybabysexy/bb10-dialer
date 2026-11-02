@@ -3,6 +3,10 @@ package com.duc1607.bb10dialer.ui.calls
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -89,6 +93,7 @@ fun CallDetailsScreen(
     Column(modifier.fillMaxSize().background(c.background)) {
         Header(
             title = name ?: number,
+            number = number,
             photo = known?.first?.photo,
             subtitle = when {
                 name == null -> stringResource(R.string.unknown_number)
@@ -131,11 +136,16 @@ fun CallDetailsScreen(
     }
 }
 
+/** Holding the title copies it, holding the line under it copies the number. */
 @Composable
-private fun Header(title: String, photo: ContactPhoto?, subtitle: String) {
+private fun Header(title: String, number: String, photo: ContactPhoto?, subtitle: String) {
     val c = Bb10.colors
     val d = Bb10.dimens
     val t = Bb10.typography
+    val clipboard = LocalClipboardManager.current
+    fun copyOnHold(text: String) = Modifier.pointerInput(text) {
+        detectTapGestures(onLongPress = { if (text.isNotEmpty()) clipboard.setText(AnnotatedString(text)) })
+    }
     Column(Modifier.fillMaxWidth().background(c.background)) {
         Row(
             Modifier.fillMaxWidth().height(d.listItemMinHeight),
@@ -149,7 +159,7 @@ private fun Header(title: String, photo: ContactPhoto?, subtitle: String) {
                     style = t.title,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.semantics { heading() },
+                    modifier = Modifier.semantics { heading() }.then(copyOnHold(title)),
                 )
                 Bb10Text(
                     subtitle,
@@ -157,6 +167,7 @@ private fun Header(title: String, photo: ContactPhoto?, subtitle: String) {
                     color = c.textSecondary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                    modifier = copyOnHold(number),
                 )
             }
         }

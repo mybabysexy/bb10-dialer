@@ -46,9 +46,13 @@ data class Contact(
     val favorite: Boolean = false,
     /** The full size photo, for the places that show it large. */
     val largePhoto: ContactPhoto? = null,
+    /** For a Chinese name: how it is spelled in Latin letters. */
+    val phonetic: Phonetic? = null,
 ) {
     /** Worked out once, on the loading thread: sorting and searching keep asking for it. */
     val foldedName: String = name.folded()
+    /** What the contact is listed and sorted by: a Chinese name goes under the letter it starts with. */
+    val indexKey: String = phonetic?.full ?: foldedName
 }
 
 /** The contacts and what the screens derive from them, built once away from the main thread. */
