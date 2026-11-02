@@ -3,6 +3,7 @@ package com.duc1607.bb10dialer
 import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
+import android.util.Log
 import android.database.ContentObserver
 import android.os.Handler
 import android.os.Looper
@@ -126,12 +127,21 @@ class DialerViewModel(application: Application) : AndroidViewModel(application) 
     suspend fun contactAccounts(): List<ContactAccount> =
         withContext(Dispatchers.IO) { repository.loadAccounts() }
 
-    /** Saves, then refreshes the lists. [onDone] gets the contact's id, or null when it failed. */
-    fun saveContact(draft: ContactDraft, onDone: (Long?) -> Unit) {
+    /** Saves, then refreshes the lists. [onDone] gets the contact's id, or why it failed. */
+    fun saveContact(draft: ContactDraft, onDone: (Result<Long>) -> Unit) {
         viewModelScope.launch {
-            val id = withContext(Dispatchers.IO) { runCatching { repository.saveContact(draft) }.getOrNull() }
+            val result = withContext(Dispatchers.IO) { runCatching { repository.saveContact(draft) } }
+            result.exceptionOrNull()?.let { Log.w(TAG, "Saving a contact failed", it) }
             refresh()
-            onDone(id)
+            onDone(result)
+        }
+    }
+
+    /** Takes calls out of the call log, then refreshes the lists. */
+    fun deleteCalls(ids: List<Long>) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { runCatching { repository.deleteCalls(ids) } }
+            refresh()
         }
     }
 
@@ -147,6 +157,10 @@ class DialerViewModel(application: Application) : AndroidViewModel(application) 
     fun setQuickContact(slot: Int, number: String?) {
         quickContacts.set(slot, number)
         _state.update { it.copy(quick = quickContacts.load()) }
+    }
+
+    private companion object {
+        const val TAG = "DialerViewModel"
     }
 
     private fun granted(permission: String) =

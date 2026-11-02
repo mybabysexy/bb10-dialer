@@ -42,6 +42,8 @@ data class PhoneSettings(
     /** Whole numbers and prefixes, all treated as prefixes: see [isBlacklisted]. */
     val blacklist: List<String> = emptyList(),
     val showAnswerSlider: Boolean = true,
+    /** Answer to the right and decline to the left, for the other hand. */
+    val answerOnRight: Boolean = false,
     val showEndButton: Boolean = true,
     /** Off: quick contacts and the call list leave out the numbers of saved contacts. */
     val showNumbers: Boolean = true,
@@ -137,6 +139,7 @@ object PhoneSettingsStore {
             phoneModel = PhoneModel.entries.firstOrNull { it.name == p.getString("phone_model", null) } ?: d.phoneModel,
             blacklist = p.getString("blacklist", "").orEmpty().split('\n').filter { it.isNotEmpty() },
             showAnswerSlider = p.getBoolean("show_slider", d.showAnswerSlider),
+            answerOnRight = p.getBoolean("answer_right", d.answerOnRight),
             showEndButton = p.getBoolean("show_end", d.showEndButton),
             showNumbers = p.getBoolean("show_numbers", d.showNumbers),
             missedSeenMillis = p.getLong("missed_seen", d.missedSeenMillis),
@@ -173,6 +176,7 @@ object PhoneSettingsStore {
             putString("phone_model", s.phoneModel.name)
             putString("blacklist", s.blacklist.joinToString("\n"))
             putBoolean("show_slider", s.showAnswerSlider)
+            putBoolean("answer_right", s.answerOnRight)
             putBoolean("show_end", s.showEndButton)
             putBoolean("show_numbers", s.showNumbers)
             putLong("missed_seen", s.missedSeenMillis)

@@ -90,7 +90,8 @@ fun searchContacts(contacts: List<Contact>, query: String): List<Contact> {
     val q = query.trim().folded()
     if (q.isEmpty()) return contacts
     return contacts.filter { contact ->
-        contact.foldedName.contains(q) || contact.numbers.any { findTyped(it.number, q) != null }
+        contact.foldedName.contains(q) || contact.phonetic?.matches(q) == true ||
+            contact.numbers.any { findTyped(it.number, q) != null }
     }
 }
 
@@ -109,13 +110,13 @@ const val FAVORITES_SECTION = "★"
 fun contactSections(contacts: List<Contact>): List<Section<Contact>> {
     val (favorites, others) = contacts.partition { it.favorite }
     val letters = others
-        .groupBy { letterOfFolded(it.foldedName) }
+        .groupBy { letterOfFolded(it.indexKey) }
         .toSortedMap(compareBy<String> { it == "#" }.thenBy { it })
-        .map { (letter, items) -> Section(letter, items.sortedBy { it.foldedName }) }
+        .map { (letter, items) -> Section(letter, items.sortedBy { it.indexKey }) }
     return if (favorites.isEmpty()) {
         letters
     } else {
-        listOf(Section(FAVORITES_SECTION, favorites.sortedBy { it.foldedName })) + letters
+        listOf(Section(FAVORITES_SECTION, favorites.sortedBy { it.indexKey })) + letters
     }
 }
 

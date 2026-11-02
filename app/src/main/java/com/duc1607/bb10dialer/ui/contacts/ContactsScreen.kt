@@ -33,6 +33,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.InputMode
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.res.stringResource
@@ -53,6 +54,7 @@ import com.duc1607.bb10dialer.ui.DialerActions
 import com.duc1607.bb10dialer.ui.common.Avatar
 import com.duc1607.bb10dialer.ui.common.EmptyMessage
 import com.duc1607.bb10dialer.ui.common.SectionHeader
+import com.duc1607.bb10dialer.ui.common.isDelete
 import com.duc1607.bb10dialer.ui.common.onCallKey
 import com.duc1607.bb10dialer.ui.theme.DialerColors
 import com.duc1607.bb10dialer.ui.theme.DialerIcons
@@ -84,6 +86,10 @@ fun ContactsScreen(
     refocus: Int,
     actions: DialerActions,
     onOpenCard: (Long) -> Unit,
+    /** Holding a contact, or Menu on it: picks it for the menu ([LocalBb10Menu]). */
+    onContactMenu: (Contact) -> Unit,
+    /** Del on a contact. */
+    onDeleteContact: (Contact) -> Unit,
     onAllowAccess: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -140,6 +146,8 @@ fun ContactsScreen(
                             onDetails = { onOpenCard(contact.id) },
                             onNumber = actions::call,
                             onCallKey = actions::call,
+                            onMenu = { onContactMenu(contact) },
+                            onDelete = { onDeleteContact(contact) },
                         )
                     }
                 }
@@ -171,6 +179,10 @@ fun ContactRow(
     onNumber: (String) -> Unit,
     /** The Call key on this contact, or on one of their numbers. */
     onCallKey: ((String) -> Unit)? = null,
+    /** Holding the contact, or Menu on it (null: no menu): picks it for the menu ([LocalBb10Menu]). */
+    onMenu: (() -> Unit)? = null,
+    /** Del on the contact. */
+    onDelete: (() -> Unit)? = null,
 ) {
     val c = Bb10.colors
     val d = Bb10.dimens
@@ -183,7 +195,15 @@ fun ContactRow(
                 .fillMaxWidth()
                 .height(d.listItemMinHeight)
                 .then(if (expanded) Modifier.background(DialerColors.RowExpanded) else Modifier)
-                .bb10Clickable(role = Role.Button, highlight = highlight, flat = true, onClick = onToggle),
+                .then(
+                    if (onDelete == null) Modifier else Modifier.onKeyEvent { e ->
+                        if (e.isDelete()) {
+                            onDelete()
+                            true
+                        } else false
+                    }
+                )
+                .bb10Clickable(role = Role.Button, highlight = highlight, flat = true, onMenu = onMenu, onClick = onToggle),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Avatar(Modifier.size(d.listItemMinHeight), contact.photo)

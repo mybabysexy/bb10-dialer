@@ -78,7 +78,7 @@
     <string name="debug_call_sim">呼叫 %1$s（SIM %2$d）</string>
     <string name="no_sms_app">未找到短信应用</string>
 
-    <!-- The contact card, the contact form and the quick contact picker. -->
+    <!-- The contact card, the contact form and the speed dial picker. -->
     <string name="tab_details">详情</string>
     <string name="tab_activity">动态</string>
     <string name="action_edit">编辑</string>
@@ -99,6 +99,8 @@
     <string name="mark_favorite">加入收藏</string>
     <string name="remove_favorite">取消收藏</string>
     <string name="delete">删除</string>
+    <string name="delete_call_title">从通话记录中删除？</string>
+    <string name="delete_call_message">此条目及其合并的通话将从通话记录中删除。</string>
     <string name="delete_contact_title">删除此联系人？</string>
     <string name="delete_contact_message">该联系人将从此设备及其同步的帐号中移除。</string>
     <string name="save_failed">无法更改联系人</string>
@@ -120,7 +122,7 @@
     <string name="quick_contact_number">%1$s，%2$s</string>
     <string name="select_contact">选择联系人</string>
     <string name="select_number">选择号码</string>
-    <string name="remove_quick_contact">移除快捷联系人</string>
+    <string name="remove_quick_contact">从快速拨号中移除</string>
 
     <!-- The call screens. -->
     <string name="my_number">本机号码：%1$s</string>
@@ -163,7 +165,7 @@
     <string name="display_slider_note">关闭后，请使用通话键或通知接听。</string>
     <string name="display_end_button">显示结束通话按钮</string>
     <string name="display_numbers">显示已保存联系人的号码</string>
-    <string name="display_numbers_note">适用于快捷联系人、通话列表和通话界面。未保存的号码始终完整显示。</string>
+    <string name="display_numbers_note">适用于快速拨号、通话列表和通话界面。未保存的号码始终完整显示。</string>
     <string name="setting_notifications">通知</string>
     <string name="setting_silence_ringer">静音铃声</string>
     <string name="setting_bluetooth">蓝牙</string>
@@ -240,7 +242,7 @@
     <string name="silence_tap_note">开启后，来电时轻触屏幕任意位置即可静音铃声。关闭后，请轻触静音铃声图标。</string>
     <string name="voicemail_access">接入号码</string>
     <string name="voicemail_access_hint">编辑接入号码</string>
-    <string name="voicemail_note">留空时，通话页面会显示多一个快捷联系人来代替语音信箱。</string>
+    <string name="voicemail_note">留空时，通话页面会显示多一个快速拨号来代替语音信箱。</string>
     <string name="voicemail_password_note">语音信箱密码需拨打语音信箱更改。</string>
     <string name="bt_answer">连接耳机时自动接听来电</string>
     <string name="bt_answer_note">开启后，来电将在 5 秒后自动接听。更多耳机选项请在设备的蓝牙设置中更改。</string>
@@ -325,4 +327,14 @@
     <string name="call_status_dialing">正在呼叫…</string>
     <string name="call_status_busy">忙线</string>
     <string name="call_status_unreachable">无法接通</string>
+    <string name="save_failed_because">无法保存联系人（%1$s）</string>
+    <string name="display_swap_slider">在右侧接听</string>
+    <string name="display_swap_slider_note">向右拖动接听，向左拖动拒接，方便左手操作。</string>
+    <string name="view_call_details">查看通话详情</string>
+    <string name="copy_number">复制号码</string>
+    <string name="add_to_contacts">添加到联系人</string>
+    <string name="add_speed_dial">添加到快速拨号</string>
+    <string name="speed_dial_added">已添加到快速拨号</string>
+    <string name="speed_dial_exists">该号码已在快速拨号中</string>
+    <string name="speed_dial_full">快速拨号已满，请先移除一个。</string>
 </resources>

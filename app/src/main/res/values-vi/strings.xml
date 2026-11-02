@@ -77,7 +77,7 @@
     <string name="debug_call">Gọi %1$s</string>
     <string name="debug_call_sim">Gọi %1$s (SIM %2$d)</string>
 
-    <!-- The contact card, the contact form and the quick contact picker. -->
+    <!-- The contact card, the contact form and the speed dial picker. -->
     <string name="tab_details">Chi tiết</string>
     <string name="tab_activity">Hoạt động</string>
     <string name="action_edit">Sửa</string>
@@ -98,6 +98,8 @@
     <string name="mark_favorite">Đánh dấu yêu thích</string>
     <string name="remove_favorite">Bỏ yêu thích</string>
     <string name="delete">Xóa</string>
+    <string name="delete_call_title">Xóa khỏi lịch sử cuộc gọi?</string>
+    <string name="delete_call_message">Mục này, cùng các cuộc gọi được gộp trong nó, sẽ bị xóa khỏi lịch sử cuộc gọi.</string>
     <string name="delete_contact_title">Xóa liên hệ này?</string>
     <string name="delete_contact_message">Liên hệ sẽ bị xóa khỏi máy và khỏi tài khoản mà nó đồng bộ.</string>
     <string name="save_failed">Không thay đổi được liên hệ</string>
@@ -119,7 +121,7 @@
     <string name="quick_contact_number">%1$s, %2$s</string>
     <string name="select_contact">Chọn liên hệ</string>
     <string name="select_number">Chọn số</string>
-    <string name="remove_quick_contact">Bỏ liên hệ nhanh</string>
+    <string name="remove_quick_contact">Bỏ khỏi quay số nhanh</string>
 
     <!-- The call screens. -->
     <string name="my_number">Số của tôi: %1$s</string>
@@ -162,7 +164,7 @@
     <string name="display_slider_note">Khi tắt, nghe máy bằng phím Gọi hoặc từ thông báo.</string>
     <string name="display_end_button">Hiện nút kết thúc trong cuộc gọi</string>
     <string name="display_numbers">Hiện số của liên hệ đã lưu</string>
-    <string name="display_numbers_note">Ở liên hệ nhanh, danh sách cuộc gọi và màn cuộc gọi. Số chưa lưu luôn hiện đầy đủ.</string>
+    <string name="display_numbers_note">Ở quay số nhanh, danh sách cuộc gọi và màn cuộc gọi. Số chưa lưu luôn hiện đầy đủ.</string>
     <string name="setting_notifications">Thông báo</string>
     <string name="setting_silence_ringer">Tắt chuông</string>
     <string name="setting_bluetooth">Bluetooth</string>
@@ -239,7 +241,7 @@
     <string name="silence_tap_note">Khi bật, chạm vào bất kỳ đâu trên màn hình để tắt chuông khi có cuộc gọi đến. Khi tắt, chạm vào biểu tượng Tắt chuông.</string>
     <string name="voicemail_access">Số truy cập</string>
     <string name="voicemail_access_hint">Sửa số truy cập</string>
-    <string name="voicemail_note">Để trống thì màn Cuộc gọi hiện thêm một liên hệ nhanh thay cho Thư thoại.</string>
+    <string name="voicemail_note">Để trống thì màn Cuộc gọi hiện thêm một ô quay số nhanh thay cho Thư thoại.</string>
     <string name="voicemail_password_note">Mật khẩu thư thoại được đổi bằng cách gọi vào thư thoại.</string>
     <string name="bt_answer">Tự động nghe máy khi đang kết nối tai nghe</string>
     <string name="bt_answer_note">Khi bật, cuộc gọi sẽ tự được nghe sau 5 giây. Các tùy chọn khác của tai nghe nằm trong cài đặt Bluetooth của máy.</string>
@@ -324,4 +326,14 @@
     <string name="call_status_dialing">Đang gọi…</string>
     <string name="call_status_busy">Máy bận</string>
     <string name="call_status_unreachable">Không liên lạc được</string>
+    <string name="save_failed_because">Không lưu được liên hệ (%1$s)</string>
+    <string name="display_swap_slider">Nghe máy ở bên phải</string>
+    <string name="display_swap_slider_note">Kéo sang phải để nghe, sang trái để từ chối, cho người thuận tay trái.</string>
+    <string name="view_call_details">Xem chi tiết cuộc gọi</string>
+    <string name="copy_number">Sao chép số</string>
+    <string name="add_to_contacts">Thêm vào danh bạ</string>
+    <string name="add_speed_dial">Thêm vào quay số nhanh</string>
+    <string name="speed_dial_added">Đã thêm vào quay số nhanh</string>
+    <string name="speed_dial_exists">Số này đã có trong quay số nhanh</string>
+    <string name="speed_dial_full">Hết chỗ quay số nhanh. Hãy bỏ bớt một số.</string>
 </resources>

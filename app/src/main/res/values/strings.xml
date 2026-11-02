@@ -79,7 +79,7 @@
     <string name="debug_call_sim">Call %1$s (SIM %2$d)</string>
     <string name="no_sms_app">No messaging app found</string>
 
-    <!-- The contact card, the contact form and the quick contact picker. -->
+    <!-- The contact card, the contact form and the speed dial picker. -->
     <string name="tab_details">Details</string>
     <string name="tab_activity">Activity</string>
     <string name="action_edit">Edit</string>
@@ -100,6 +100,8 @@
     <string name="mark_favorite">Mark Favorite</string>
     <string name="remove_favorite">Remove Favorite</string>
     <string name="delete">Delete</string>
+    <string name="delete_call_title">Delete from Call History?</string>
+    <string name="delete_call_message">This entry, and the calls grouped under it, are removed from the call history.</string>
     <string name="delete_contact_title">Delete this contact?</string>
     <string name="delete_contact_message">The contact is removed from this device and from the account it syncs with.</string>
     <string name="save_failed">Could not change the contact</string>
@@ -121,7 +123,7 @@
     <string name="quick_contact_number">%1$s, %2$s</string>
     <string name="select_contact">Select Contact</string>
     <string name="select_number">Select Number</string>
-    <string name="remove_quick_contact">Remove Quick Contact</string>
+    <string name="remove_quick_contact">Remove from Speed Dial</string>
 
     <!-- The call screens. -->
     <string name="my_number">My number: %1$s</string>
@@ -164,7 +166,7 @@
     <string name="display_slider_note">When turned off, answer with the Call key or from the notification.</string>
     <string name="display_end_button">Show the End Call Button</string>
     <string name="display_numbers">Show Numbers of Saved Contacts</string>
-    <string name="display_numbers_note">In quick contacts, the call list and the call screens. Numbers that are not saved always show in full.</string>
+    <string name="display_numbers_note">In speed dial, the call list and the call screens. Numbers that are not saved always show in full.</string>
     <string name="setting_notifications">Notifications</string>
     <string name="setting_silence_ringer">Silence Ringer</string>
     <string name="setting_bluetooth">Bluetooth</string>
@@ -241,7 +243,7 @@
     <string name="silence_tap_note">When turned on, tap anywhere on the screen to silence the ringer when you receive a call. When turned off, tap the Silence Ringer icon.</string>
     <string name="voicemail_access">Access Number</string>
     <string name="voicemail_access_hint">Edit Access Number</string>
-    <string name="voicemail_note">When empty, the Calls tab shows another quick contact instead of Voicemail.</string>
+    <string name="voicemail_note">When empty, the Calls tab shows another speed dial instead of Voicemail.</string>
     <string name="voicemail_password_note">Your voicemail password is changed by calling your voicemail.</string>
     <string name="bt_answer">Automatically Answer a Call When Connected to a Headset</string>
     <string name="bt_answer_note">When turned on, your call will automatically be answered after 5 seconds. Change more headset options from your device\'s Bluetooth settings.</string>
@@ -326,4 +328,14 @@
     <string name="call_status_dialing">Calling…</string>
     <string name="call_status_busy">Busy</string>
     <string name="call_status_unreachable">Can\'t be reached</string>
+    <string name="save_failed_because">Could not save the contact (%1$s)</string>
+    <string name="display_swap_slider">Answer on the Right</string>
+    <string name="display_swap_slider_note">Drag right to answer and left to decline, for the left hand.</string>
+    <string name="view_call_details">View Call Details</string>
+    <string name="copy_number">Copy Number</string>
+    <string name="add_to_contacts">Add to Contacts</string>
+    <string name="add_speed_dial">Add to Speed Dial</string>
+    <string name="speed_dial_added">Added to speed dial</string>
+    <string name="speed_dial_exists">Already a speed dial</string>
+    <string name="speed_dial_full">No free speed dial. Remove one first.</string>
 </resources>

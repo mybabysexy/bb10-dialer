@@ -110,7 +110,12 @@ class DialerRepository(private val context: Context) {
                 val name = c.getString(1)?.takeIf { it.isNotBlank() } ?: phones.firstOrNull()?.number ?: continue
                 val photo = c.getString(2)?.let { ContactPhoto(it, c.getLong(3)) }
                 val largePhoto = c.getString(5)?.let { ContactPhoto(it, c.getLong(3)) }
-                contacts += Contact(id, name, phones, photo, favorite = c.getInt(4) != 0, largePhoto = largePhoto)
+                contacts += Contact(
+                    id, name, phones, photo,
+                    favorite = c.getInt(4) != 0,
+                    largePhoto = largePhoto,
+                    phonetic = phoneticOf(name, HanRomanizer::romanize),
+                )
             }
         }
         return contacts
@@ -210,11 +215,34 @@ class DialerRepository(private val context: Context) {
         return if (contactId == null) insertContact(draft) else updateContact(contactId, draft)
     }
 
+    /**
+     * "This device" is no account at all on stock Android, but some makers keep the phone's contacts in
+     * an account of their own and refuse others there. Their account is tried first, then no account,
+     * then the account the phone saves new contacts to; the first error is the one that is told.
+     */
     private fun insertContact(draft: ContactDraft): Long {
+        if (draft.account.type != null) return insertContact(draft, draft.account)
+        val local = runCatching {
+            ContactAccount(RawContacts.getLocalAccountType(context), RawContacts.getLocalAccountName(context))
+        }.getOrNull()
+        val default = runCatching { ContactsContract.Settings.getDefaultAccount(resolver) }.getOrNull()?.let { ContactAccount(it.type, it.name) }
+        val tries = listOfNotNull(local?.takeIf { it.type != null }, draft.account, default).distinct()
+        var first: Throwable? = null
+        for (account in tries) {
+            try {
+                return insertContact(draft, account)
+            } catch (e: Exception) {
+                if (first == null) first = e
+            }
+        }
+        throw first ?: IllegalStateException("No account to save to")
+    }
+
+    private fun insertContact(draft: ContactDraft, account: ContactAccount): Long {
         val ops = arrayListOf(
             ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
-                .withValue(RawContacts.ACCOUNT_TYPE, draft.account.type)
-                .withValue(RawContacts.ACCOUNT_NAME, draft.account.name)
+                .withValue(RawContacts.ACCOUNT_TYPE, account.type)
+                .withValue(RawContacts.ACCOUNT_NAME, account.name)
                 .withValue(RawContacts.STARRED, if (draft.favorite) 1 else 0)
                 .build()
         )
@@ -227,10 +255,12 @@ class DialerRepository(private val context: Context) {
         planFieldChanges(emptyList(), draft.fields).inserts.forEach { field ->
             ops += ContentProviderOperation.newInsert(Data.CONTENT_URI)
                 .withValueBackReference(Data.RAW_CONTACT_ID, 0)
-                .withValues(fieldValues(field, draft.account))
+                .withValues(fieldValues(field, account))
                 .build()
         }
-        val rawId = ContentUris.parseId(resolver.applyBatch(ContactsContract.AUTHORITY, ops)[0].uri!!)
+        // Null when the system quietly refused, as some phones do with their own privacy settings.
+        val inserted = checkNotNull(resolver.applyBatch(ContactsContract.AUTHORITY, ops)[0].uri) { "The system did not save the contact" }
+        val rawId = ContentUris.parseId(inserted)
         draft.photoUri?.let { writePhoto(rawId, it) }
         return contactIdOf(rawId)
     }
@@ -424,6 +454,11 @@ class DialerRepository(private val context: Context) {
     private fun slotOf(component: String?, id: String?): Int? {
         val name = component?.let(ComponentName::unflattenFromString)
         return if (name != null && id != null) simSlot(context, PhoneAccountHandle(name, id)) else null
+    }
+
+    fun deleteCalls(ids: List<Long>) {
+        if (ids.isEmpty()) return
+        resolver.delete(CallLog.Calls.CONTENT_URI, "${CallLog.Calls._ID} IN (${ids.joinToString()})", null)
     }
 
     fun clearCalls() {

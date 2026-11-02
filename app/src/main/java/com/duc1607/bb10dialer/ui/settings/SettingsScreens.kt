@@ -344,6 +344,14 @@ private fun DisplayPage(
         Bb10Toggle(settings.showAnswerSlider, { on -> change { it.copy(showAnswerSlider = on) } }, label = stringResource(R.string.display_slider))
         SettingNote(stringResource(R.string.display_slider_note))
         Bb10Divider()
+        Bb10Toggle(
+            settings.answerOnRight,
+            { on -> change { it.copy(answerOnRight = on) } },
+            label = stringResource(R.string.display_swap_slider),
+            enabled = settings.showAnswerSlider,
+        )
+        SettingNote(stringResource(R.string.display_swap_slider_note))
+        Bb10Divider()
         Bb10Toggle(settings.showEndButton, { on -> change { it.copy(showEndButton = on) } }, label = stringResource(R.string.display_end_button))
         Bb10Divider()
         Bb10Toggle(settings.showNumbers, { on -> change { it.copy(showNumbers = on) } }, label = stringResource(R.string.display_numbers))

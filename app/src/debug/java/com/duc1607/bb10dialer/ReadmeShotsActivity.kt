@@ -122,11 +122,13 @@ class ReadmeShotsActivity : ComponentActivity() {
                     onPickQuick = {},
                     onQuickMenu = {},
                     onDetails = {},
+                    onCallMenu = {},
+                    onDeleteCall = {},
                     onAllowAccess = {},
                 )
             }
             2 -> WithTabs(1) {
-                ContactsScreen(book, emptyList(), canReadContacts = true, refocus = 0, actions = actions, onOpenCard = {}, onAllowAccess = {})
+                ContactsScreen(book, emptyList(), canReadContacts = true, refocus = 0, actions = actions, onOpenCard = {}, onContactMenu = {}, onDeleteContact = {}, onAllowAccess = {})
             }
             3 -> WithTabs(2) {
                 DialPadScreen(PUBLIC_NUMBER, {}, book, calls, listOf(1), 0, actions, {})

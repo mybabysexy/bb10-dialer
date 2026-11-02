@@ -33,7 +33,7 @@ Dữ liệu trong ảnh là dữ liệu giả.
 - Ghi âm cuộc gọi, tua lại ngay dưới cuộc gọi trong lịch sử. **Cần root**, xem [Ghi âm cuộc gọi](#ghi-âm-cuộc-gọi).
 
 **Danh bạ và lịch sử**
-- Lịch sử cuộc gọi theo ngày, liên hệ nhanh, bàn phím số gợi ý theo số đang nhập.
+- Lịch sử cuộc gọi theo ngày, quay số nhanh, bàn phím số gợi ý theo số đang nhập.
 - Xem, thêm, sửa, xóa liên hệ.
 - Kéo xuống đầu danh sách để xem số và nhà mạng của từng SIM.
 
