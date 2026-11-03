@@ -336,4 +336,15 @@
     <string name="speed_dial_added">Đã thêm vào quay số nhanh</string>
     <string name="speed_dial_exists">Số này đã có trong quay số nhanh</string>
     <string name="speed_dial_full">Hết chỗ quay số nhanh. Hãy bỏ bớt một số.</string>
+
+    <!-- Speed dial. -->
+    <string name="setting_speed_dial">Quay số nhanh</string>
+    <string name="speed_dial_tiles_note">Các ô ở đầu màn Cuộc gọi: ba ô khi Thư thoại chiếm ô đầu tiên, còn lại là bốn ô.</string>
+    <string name="speed_dial_keys_note">Giữ một phím trên Bàn phím số khi chưa nhập gì để gọi số của phím đó. Giữ phím 1 sẽ gọi Thư thoại.</string>
+    <string name="speed_dial_remove_title">Bỏ khỏi quay số nhanh?</string>
+    <string name="speed_dial_remove_message">%1$s sẽ không còn trong quay số nhanh.</string>
+    <string name="speed_dial_unset_message">Phím %1$d chưa có số. Thêm vào quay số nhanh?</string>
+    <string name="voicemail_unset_message">Chưa có số thư thoại. Thiết lập ngay?</string>
+    <string name="set_up">Thiết lập</string>
+    <string name="remove">Bỏ</string>
 </resources>

@@ -43,20 +43,33 @@ private val PadRows = listOf(
 /**
  * The four rows of keys, sharing the height of the column they are in. Holding 0 types the "+"
  * written next to it, unless [holdZeroForPlus] is off: a call in progress has no use for it.
+ * Holding 1 to 9 is [onHold] (speed dial), when given. The voicemail mark on 1 shows only when
+ * there is a [voicemail] number.
  */
 @Composable
-internal fun ColumnScope.PadKeys(digitSize: TextUnit, holdZeroForPlus: Boolean = true, onSymbol: (Char) -> Unit) {
+internal fun ColumnScope.PadKeys(
+    digitSize: TextUnit,
+    holdZeroForPlus: Boolean = true,
+    voicemail: Boolean = false,
+    onHold: ((Char) -> Unit)? = null,
+    onSymbol: (Char) -> Unit,
+) {
     PadRows.forEach { row ->
         Row(Modifier.weight(1f).fillMaxWidth()) {
             row.forEach { key ->
-                PadButton(key, digitSize, holdZeroForPlus, onSymbol)
+                val hold = when {
+                    key.symbol == '0' && holdZeroForPlus -> ({ onSymbol('+') })
+                    onHold != null && key.symbol in '1'..'9' -> ({ onHold(key.symbol) })
+                    else -> null
+                }
+                PadButton(key, digitSize, voicemail, hold, onSymbol)
             }
         }
     }
 }
 
 @Composable
-private fun RowScope.PadButton(key: PadKey, digitSize: TextUnit, holdZeroForPlus: Boolean, onSymbol: (Char) -> Unit) {
+private fun RowScope.PadButton(key: PadKey, digitSize: TextUnit, voicemail: Boolean, onHold: (() -> Unit)?, onSymbol: (Char) -> Unit) {
     val t = Bb10.typography
     val highlight = rememberBb10Highlight()
     Row(
@@ -66,7 +79,7 @@ private fun RowScope.PadButton(key: PadKey, digitSize: TextUnit, holdZeroForPlus
             .bb10Clickable(
                 role = Role.Button,
                 highlight = highlight,
-                onLongClick = if (key.symbol == '0' && holdZeroForPlus) ({ onSymbol('+') }) else null,
+                onLongClick = onHold,
                 onClick = { onSymbol(key.symbol) },
             ),
         verticalAlignment = Alignment.CenterVertically,
@@ -79,7 +92,7 @@ private fun RowScope.PadButton(key: PadKey, digitSize: TextUnit, holdZeroForPlus
                 maxLines = 1,
             )
             Spacer(Modifier.width(Bb10.dimens.spaceM))
-            if (key.icon != null) {
+            if (key.icon != null && voicemail) {
                 Bb10Icon(key.icon, Modifier.width(22.dp).height(10.dp))
             } else if (key.letters != null) {
                 Bb10Text(stringResource(key.letters), style = t.body, maxLines = 1)

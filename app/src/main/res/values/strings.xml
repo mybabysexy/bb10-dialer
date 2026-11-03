@@ -338,4 +338,15 @@
     <string name="speed_dial_added">Added to speed dial</string>
     <string name="speed_dial_exists">Already a speed dial</string>
     <string name="speed_dial_full">No free speed dial. Remove one first.</string>
+
+    <!-- Speed dial. -->
+    <string name="setting_speed_dial">Speed Dial</string>
+    <string name="speed_dial_tiles_note">The tiles at the top of the Calls tab: three when Voicemail takes the first place, four otherwise.</string>
+    <string name="speed_dial_keys_note">Hold a key on the Dial Pad, with nothing typed, to call its number. Holding 1 calls Voicemail.</string>
+    <string name="speed_dial_remove_title">Remove from Speed Dial?</string>
+    <string name="speed_dial_remove_message">%1$s will no longer be on speed dial.</string>
+    <string name="speed_dial_unset_message">Key %1$d has no number yet. Add one to speed dial?</string>
+    <string name="voicemail_unset_message">No voicemail number is set yet. Set one up?</string>
+    <string name="set_up">Set Up</string>
+    <string name="remove">Remove</string>
 </resources>
