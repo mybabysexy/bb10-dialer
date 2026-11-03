@@ -24,6 +24,9 @@ import com.duc1607.bb10dialer.data.notedCalls
 import com.duc1607.bb10dialer.data.ringtoneFor
 import com.duc1607.bb10dialer.data.sampleSizeFor
 import com.duc1607.bb10dialer.ui.calls.playbackTime
+import androidx.compose.runtime.saveable.SaverScope
+import com.duc1607.bb10dialer.ui.Route
+import com.duc1607.bb10dialer.ui.RouteStackSaver
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -216,5 +219,12 @@ class AdvancedSettingsTest {
         val calls = listOf(call(3, "0346697174", 300), call(2, "0900000000", 200), call(1, "0346697174", 100))
         assertEquals(setOf(1L, 2L), notedCalls(calls, listOf(note("+84346697174", 150), note("0900000000", 400))))
         assertEquals(emptySet<Long>(), notedCalls(calls, emptyList()))
+    }
+
+    @Test
+    fun `the speed dial pages come back after the app is restored`() {
+        val routes = listOf(Route.Settings, Route.SpeedDial, Route.PickSpeedKey(7), Route.PickQuick(2))
+        val saved = with(RouteStackSaver) { SaverScope { true }.save(routes) }!!
+        assertEquals(routes, RouteStackSaver.restore(saved))
     }
 }

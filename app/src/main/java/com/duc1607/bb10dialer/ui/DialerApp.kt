@@ -69,6 +69,8 @@ import com.duc1607.bb10dialer.ui.contacts.QuickContactPickerScreen
 import com.duc1607.bb10dialer.ui.dialpad.DialPadScreen
 import com.duc1607.bb10dialer.ui.settings.PhoneSettingsScreen
 import com.duc1607.bb10dialer.ui.settings.SettingPageScreen
+import com.duc1607.bb10dialer.ui.settings.SettingPage
+import com.duc1607.bb10dialer.ui.settings.SpeedDialScreen
 import com.duc1607.bb10dialer.ui.theme.DialerColors
 import com.duc1607.bb10dialer.ui.theme.DialerIcons
 import duc1607.bb10.designsystem.components.Bb10Dialog
@@ -142,6 +144,8 @@ fun DialerApp(
     var menuPeek by remember { mutableStateOf(false) }
     val hold = remember { Bb10MenuHold() }
     var confirmDeleteCall by remember { mutableStateOf<CallGroup?>(null) }
+    // A key held on the dial pad that has nothing to call yet: 1 for voicemail, 2 to 9 for speed dial.
+    var unsetKey by remember { mutableStateOf<Int?>(null) }
     var confirmDeleteContact by remember { mutableStateOf<Contact?>(null) }
     var confirmClear by rememberSaveable { mutableStateOf(false) }
     // Bumped when the menu closes, so the tab can take its focus back.
@@ -377,6 +381,15 @@ fun DialerApp(
                                         refocus = refocus,
                                         actions = actions,
                                         onAddContact = { push(Route.Editor(number = it)) },
+                                        hasVoicemail = phoneSettings.voicemailNumber.isNotEmpty(),
+                                        onSpeedDial = { digit ->
+                                            val number = if (digit == 1) phoneSettings.voicemailNumber else state.speedKeys[digit]
+                                            when {
+                                                number.isNullOrEmpty() -> unsetKey = digit
+                                                digit == 1 -> actions.voicemail()
+                                                else -> actions.call(number)
+                                            }
+                                        },
                                     )
                                 }
                             } }
@@ -395,6 +408,23 @@ fun DialerApp(
                         entries = itemMenuEntries ?: menu,
                         onDismiss = ::closeMenu,
                     )
+                    unsetKey?.let { digit ->
+                        Bb10Dialog(
+                            title = stringResource(if (digit == 1) R.string.voicemail else R.string.setting_speed_dial),
+                            message = if (digit == 1) {
+                                stringResource(R.string.voicemail_unset_message)
+                            } else {
+                                stringResource(R.string.speed_dial_unset_message, digit)
+                            },
+                            confirmText = stringResource(R.string.set_up),
+                            dismissText = stringResource(R.string.cancel),
+                            onConfirm = {
+                                unsetKey = null
+                                push(if (digit == 1) Route.Setting(SettingPage.Voicemail) else Route.SpeedDial)
+                            },
+                            onDismiss = { unsetKey = null },
+                        )
+                    }
                     confirmDeleteCall?.let { group ->
                         Bb10Dialog(
                             title = stringResource(R.string.delete_call_title),
@@ -476,6 +506,27 @@ fun DialerApp(
                             }
                         },
                         onDeleted = { pages = pages - route },
+                    )
+                    is Route.PickSpeedKey -> QuickContactPickerScreen(
+                        book = state.book,
+                        onCancel = ::pop,
+                        onPick = { number ->
+                            viewModel.setSpeedKey(route.digit, number)
+                            pop()
+                        },
+                        onNewContact = { push(Route.Editor(openCard = false)) },
+                    )
+                    Route.SpeedDial -> SpeedDialScreen(
+                        quick = state.quick,
+                        keys = state.speedKeys,
+                        index = index,
+                        hasVoicemail = phoneSettings.voicemailNumber.isNotEmpty(),
+                        showNumbers = phoneSettings.showNumbers,
+                        onPickTile = { push(Route.PickQuick(it)) },
+                        onRemoveTile = { viewModel.setQuickContact(it, null) },
+                        onPickKey = { push(Route.PickSpeedKey(it)) },
+                        onRemoveKey = { viewModel.setSpeedKey(it, null) },
+                        onBack = ::pop,
                     )
                     is Route.PickQuick -> QuickContactPickerScreen(
                         book = state.book,

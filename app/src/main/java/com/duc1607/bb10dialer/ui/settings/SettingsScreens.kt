@@ -111,7 +111,9 @@ enum class SettingPage {
     ShowMyNumber, ReplyNow, SmartDialing, FixedDialing, CallSummary, HearingAid, Tty, Blacklist, Recording, Advanced,
 }
 
-private class SettingRow(val title: Int, val icon: ImageVector, val tint: Color?, val page: SettingPage)
+private class SettingRow(val title: Int, val icon: ImageVector, val tint: Color?, val route: Route) {
+    constructor(title: Int, icon: ImageVector, tint: Color?, page: SettingPage) : this(title, icon, tint, Route.Setting(page))
+}
 
 private val Yellow = Color(0xFFEDBB16)
 private val Magenta = Color(0xFFB72F90)
@@ -124,6 +126,7 @@ private val Rows = listOf(
     SettingRow(R.string.setting_notifications, DialerIcons.Bell, Yellow, SettingPage.Notifications),
     SettingRow(R.string.setting_silence_ringer, DialerIcons.RingerOff, null, SettingPage.SilenceRinger),
     SettingRow(R.string.voicemail, DialerIcons.Voicemail, Magenta, SettingPage.Voicemail),
+    SettingRow(R.string.setting_speed_dial, DialerIcons.Star, Blue, Route.SpeedDial),
     SettingRow(R.string.setting_bluetooth, DialerIcons.Bluetooth, Blue, SettingPage.Bluetooth),
     SettingRow(R.string.setting_forwarding, DialerIcons.Forward, Yellow, SettingPage.CallForwarding),
     SettingRow(R.string.setting_waiting, DialerIcons.CallWaiting, Yellow, SettingPage.CallWaiting),
@@ -200,7 +203,7 @@ private fun SettingsRow(row: SettingRow, onOpen: (Route) -> Unit) {
                     role = Role.Button,
                     highlight = highlight,
                     flat = true,
-                    onClick = { onOpen(Route.Setting(row.page)) },
+                    onClick = { onOpen(row.route) },
                 )
                 .padding(horizontal = d.spaceM),
             verticalAlignment = Alignment.CenterVertically,

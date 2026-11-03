@@ -44,6 +44,12 @@ internal fun KeyEvent.dialSymbol(context: Context): Char {
     }
 }
 
+/** The digit this key types on a dial pad, also while it is held: 1 to 9, or null for any other. */
+internal fun KeyEvent.heldDigit(context: Context): Char? {
+    val mapped = if (isAltPressed) null else PhoneSettingsStore.get(context).phoneModel.symbolOf(key.nativeKeyCode)
+    return (mapped ?: utf16CodePoint.toChar()).takeIf { it in '1'..'9' }
+}
+
 /** The Call key was pressed, on a phone that has one. */
 internal fun KeyEvent.isCallKey(context: Context): Boolean =
     type == KeyEventType.KeyDown && nativeKeyEvent.repeatCount == 0 &&

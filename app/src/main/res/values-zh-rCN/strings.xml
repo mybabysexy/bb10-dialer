@@ -337,4 +337,15 @@
     <string name="speed_dial_added">已添加到快速拨号</string>
     <string name="speed_dial_exists">该号码已在快速拨号中</string>
     <string name="speed_dial_full">快速拨号已满，请先移除一个。</string>
+
+    <!-- Speed dial. -->
+    <string name="setting_speed_dial">快速拨号</string>
+    <string name="speed_dial_tiles_note">通话页面顶部的方块：语音信箱占第一格时为三个，否则为四个。</string>
+    <string name="speed_dial_keys_note">未输入任何号码时，在拨号盘上按住按键即可拨打对应号码。按住 1 拨打语音信箱。</string>
+    <string name="speed_dial_remove_title">从快速拨号中移除？</string>
+    <string name="speed_dial_remove_message">%1$s 将不再位于快速拨号中。</string>
+    <string name="speed_dial_unset_message">按键 %1$d 尚未设置号码。要添加到快速拨号吗？</string>
+    <string name="voicemail_unset_message">尚未设置语音信箱号码。现在设置吗？</string>
+    <string name="set_up">设置</string>
+    <string name="remove">移除</string>
 </resources>

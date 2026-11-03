@@ -64,6 +64,7 @@ import com.duc1607.bb10dialer.ui.DialerActions
 import com.duc1607.bb10dialer.ui.common.Avatar
 import com.duc1607.bb10dialer.ui.common.CellDivider
 import com.duc1607.bb10dialer.ui.common.dialSymbol
+import com.duc1607.bb10dialer.ui.common.heldDigit
 import com.duc1607.bb10dialer.ui.common.onCallKey
 import com.duc1607.bb10dialer.ui.theme.DialerColors
 import com.duc1607.bb10dialer.ui.theme.DialerIcons
@@ -90,7 +91,8 @@ private val SimButtonGap = 8.dp
  * The Dial Pad tab. While typing, the header counts the contact numbers that contain what was
  * typed; its chevron shows them over the keys. A number no contact owns can be added as a contact.
  * Digits, `*`, `#` and `+` also work from a hardware keyboard, Del deletes, Enter and the Call key
- * call. Calling with nothing typed fills in the number of the latest call, ready to go.
+ * call. Calling with nothing typed fills in the number of the latest call, ready to go. With nothing
+ * else typed, holding 1 to 9 (on the screen or the keyboard) is [onSpeedDial]: voicemail for 1.
  */
 @Composable
 fun DialPadScreen(
@@ -105,6 +107,9 @@ fun DialPadScreen(
     refocus: Int,
     actions: DialerActions,
     onAddContact: (String) -> Unit,
+    /** A voicemail number is set: 1 shows its mark. */
+    hasVoicemail: Boolean,
+    onSpeedDial: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var overlayOpen by rememberSaveable { mutableStateOf(false) }
@@ -116,6 +121,13 @@ fun DialPadScreen(
 
     fun type(symbol: Char) = onNumberEdit { if (it.length < MAX_NUMBER_LENGTH) it + symbol else it }
     fun delete() = onNumberEdit { it.dropLast(1) }
+
+    // A key held for speed dial: its repeats type nothing until it is let go.
+    val heldKey = remember { arrayOfNulls<Key>(1) }
+
+    fun hold(digit: Char) {
+        if (number.isEmpty()) onSpeedDial(digit - '0') else type(digit)
+    }
 
     fun call(sim: Int?) {
         if (number.isNotEmpty()) {
@@ -138,7 +150,20 @@ fun DialPadScreen(
             .focusRequester(focus)
             .onCallKey(context) { call(null) }
             .onKeyEvent { e ->
+                if (e.type == KeyEventType.KeyUp && e.key == heldKey[0]) {
+                    heldKey[0] = null
+                    return@onKeyEvent true
+                }
                 if (e.type != KeyEventType.KeyDown) return@onKeyEvent false
+                if (e.key == heldKey[0]) return@onKeyEvent true
+                // The first press typed the digit; held past the repeat delay, it is speed dial.
+                val held = e.heldDigit(context)
+                if (e.nativeKeyEvent.repeatCount == 1 && held != null && number == held.toString()) {
+                    heldKey[0] = e.key
+                    onNumberEdit { "" }
+                    onSpeedDial(held - '0')
+                    return@onKeyEvent true
+                }
                 val symbol = e.dialSymbol(context)
                 when {
                     e.key == Key.Enter || e.key == Key.NumPadEnter -> {
@@ -169,6 +194,8 @@ fun DialPadScreen(
                     tight = tight,
                     sims = sims,
                     canDelete = number.isNotEmpty(),
+                    hasVoicemail = hasVoicemail,
+                    onHold = { digit -> hold(digit) },
                     onSymbol = ::type,
                     onDelete = ::delete,
                     onClear = { onNumberEdit { "" } },
@@ -292,6 +319,8 @@ private fun Pad(
     tight: Boolean,
     sims: List<Int>,
     canDelete: Boolean,
+    hasVoicemail: Boolean,
+    onHold: (Char) -> Unit,
     onSymbol: (Char) -> Unit,
     onDelete: () -> Unit,
     onClear: () -> Unit,
@@ -303,7 +332,7 @@ private fun Pad(
         val rows = if (tight) 5.1f else 5.6f
         val digitSize = (maxHeight.value / rows * 0.58f).coerceIn(22f, 36f).sp
         Column(Modifier.fillMaxSize().padding(top = if (tight) 0.dp else d.spaceM)) {
-            PadKeys(digitSize, onSymbol = onSymbol)
+            PadKeys(digitSize, voicemail = hasVoicemail, onHold = onHold, onSymbol = onSymbol)
             Row(Modifier.weight(1.1f).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 if (sims.size >= 2) {
                     // SIM 1 ends in the middle of the 0 key, SIM 2 in the middle of the # key.

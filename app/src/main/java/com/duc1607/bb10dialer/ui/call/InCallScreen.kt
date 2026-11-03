@@ -71,6 +71,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
 import com.duc1607.bb10dialer.R
+import com.duc1607.bb10dialer.data.PhoneSettingsStore
 import com.duc1607.bb10dialer.ui.common.dialSymbol
 import com.duc1607.bb10dialer.ui.dialpad.PadKeys
 import com.duc1607.bb10dialer.ui.theme.DialerColors
@@ -277,7 +278,8 @@ private fun CallPad(modifier: Modifier, onSymbol: (Char) -> Unit) {
     ) {
         val digitSize = (maxHeight.value / PAD_ROWS * DIGIT_TO_ROW).coerceIn(MIN_DIGIT_SP, MAX_DIGIT_SP).sp
         Column(Modifier.fillMaxSize()) {
-            PadKeys(digitSize, holdZeroForPlus = false, onSymbol = onSymbol)
+            val voicemail = remember(context) { PhoneSettingsStore.get(context).voicemailNumber.isNotEmpty() }
+            PadKeys(digitSize, holdZeroForPlus = false, voicemail = voicemail, onSymbol = onSymbol)
         }
     }
 }

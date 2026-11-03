@@ -41,6 +41,8 @@ data class DialerState(
     val simLines: List<SimLine> = emptyList(),
     /** The number on each quick contact tile, null for an empty one. */
     val quick: List<String?> = emptyList(),
+    /** The number that holding each key 2 to 9 of the dial pad calls. */
+    val speedKeys: Map<Int, String> = emptyMap(),
     /** Goes up with every load: what is not in the book (notes, addresses) may have changed. */
     val revision: Int = 0,
     val canReadCalls: Boolean = false,
@@ -107,6 +109,7 @@ class DialerViewModel(application: Application) : AndroidViewModel(application) 
                 sims = repository.loadSims(),
                 simLines = repository.loadSimLines(),
                 quick = quickContacts.load(),
+                speedKeys = quickContacts.loadKeys(),
                 revision = known.revision + 1,
                 canReadCalls = canReadCalls,
                 canReadContacts = canReadContacts,
@@ -157,6 +160,11 @@ class DialerViewModel(application: Application) : AndroidViewModel(application) 
     fun setQuickContact(slot: Int, number: String?) {
         quickContacts.set(slot, number)
         _state.update { it.copy(quick = quickContacts.load()) }
+    }
+
+    fun setSpeedKey(digit: Int, number: String?) {
+        quickContacts.setKey(digit, number)
+        _state.update { it.copy(speedKeys = quickContacts.loadKeys()) }
     }
 
     private companion object {

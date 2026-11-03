@@ -18,6 +18,12 @@ sealed interface Route {
     /** Chooses the number of quick contact [slot]. */
     data class PickQuick(val slot: Int) : Route
 
+    /** Chooses the number that holding [digit] on the dial pad calls. */
+    data class PickSpeedKey(val digit: Int) : Route
+
+    /** The speed dial: the tiles of the Calls tab and the keys of the dial pad. */
+    data object SpeedDial : Route
+
     data object Settings : Route
 
     data class Setting(val page: SettingPage) : Route
@@ -32,6 +38,8 @@ val RouteStackSaver = Saver<List<Route>, ArrayList<ArrayList<Any?>>>(
                 is Route.Card -> arrayListOf("card", route.contactId)
                 is Route.Editor -> arrayListOf("editor", route.contactId, route.number, route.openCard)
                 is Route.PickQuick -> arrayListOf("pick", route.slot)
+                is Route.PickSpeedKey -> arrayListOf("pickkey", route.digit)
+                Route.SpeedDial -> arrayListOf("speeddial")
                 Route.Settings -> arrayListOf("settings")
                 is Route.Setting -> arrayListOf("setting", route.page.name)
             }
@@ -44,6 +52,8 @@ val RouteStackSaver = Saver<List<Route>, ArrayList<ArrayList<Any?>>>(
                 "card" -> Route.Card(r[1] as Long)
                 "editor" -> Route.Editor(r[1] as Long?, r[2] as String?, r[3] as Boolean)
                 "settings" -> Route.Settings
+                "pickkey" -> Route.PickSpeedKey(r[1] as Int)
+                "speeddial" -> Route.SpeedDial
                 "setting" -> Route.Setting(SettingPage.valueOf(r[1] as String))
                 else -> Route.PickQuick(r[1] as Int)
             }
