@@ -1,5 +1,7 @@
 package com.duc1607.bb10dialer.ui.common
 
+import android.content.ClipDescription
+import android.content.ClipboardManager
 import android.content.Context
 import android.text.InputType
 import android.view.View
@@ -27,6 +29,7 @@ import androidx.compose.ui.platform.PlatformTextInputModifierNode
 import androidx.compose.ui.platform.establishTextInputSession
 import com.duc1607.bb10dialer.data.PhoneSettingsStore
 import com.duc1607.bb10dialer.data.isCallKey
+import com.duc1607.bb10dialer.data.pastableNumber
 import com.duc1607.bb10dialer.telecom.CallCenter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -48,6 +51,17 @@ internal fun KeyEvent.dialSymbol(context: Context): Char {
 internal fun KeyEvent.heldDigit(context: Context): Char? {
     val mapped = if (isAltPressed) null else PhoneSettingsStore.get(context).phoneModel.symbolOf(key.nativeKeyCode)
     return (mapped ?: utf16CodePoint.toChar()).takeIf { it in '1'..'9' }
+}
+
+/**
+ * The number on the clipboard, when it holds one ([pastableNumber]). Reading the clip shows the
+ * system's "pasted" notice, so this is only for when the user asks: a hold, a menu opened.
+ */
+internal fun clipboardNumber(context: Context): String? {
+    val clipboard = context.getSystemService(ClipboardManager::class.java)
+    val description = clipboard.primaryClipDescription ?: return null
+    if (!description.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) return null
+    return runCatching { pastableNumber(clipboard.primaryClip?.getItemAt(0)?.coerceToText(context)) }.getOrNull()
 }
 
 /** The Call key was pressed, on a phone that has one. */
@@ -124,6 +138,18 @@ private class CallKeyField(private val view: View, private val onCall: () -> Uni
             }
         }
     }
+}
+
+/**
+ * For the call screen's `dispatchKeyEvent`: the speaker key of the phone ([PhoneModel.speakerKey])
+ * turns the speaker on or off while there is a call to talk on, whatever has the focus. True when
+ * the key was taken, its release included.
+ */
+internal fun dispatchSpeakerKey(context: Context, event: AndroidKeyEvent): Boolean {
+    if (event.keyCode != PhoneSettingsStore.get(context).phoneModel.speakerKey) return false
+    if (CallCenter.state.value.foreground == null) return false
+    if (event.action == AndroidKeyEvent.ACTION_DOWN && event.repeatCount == 0) CallCenter.toggleSpeaker()
+    return true
 }
 
 /**

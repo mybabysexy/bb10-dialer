@@ -227,6 +227,9 @@
     <string name="notifications_ringtone_sim2">Nhạc chuông SIM 2: %1$s</string>
     <string name="notifications_override">Bỏ qua âm lượng cấu hình</string>
     <string name="notifications_vibrate">Rung</string>
+    <string name="notifications_vibrate_connect">Rung khi kết nối và ngắt cuộc gọi</string>
+    <string name="notifications_vibrate_connect_note">Rung ngắn một lần khi cuộc gọi được nhấc máy, hai lần khi cuộc gọi kết thúc.</string>
+    <string name="notifications_ramping_note">“Rung trước rồi đổ chuông dần” đang bật trong cài đặt Rung và phản hồi xúc giác của hệ thống: cuộc gọi đến sẽ rung vài giây, rồi nhạc chuông mới bắt đầu nhỏ và to dần.</string>
     <string name="notifications_led">Đèn LED</string>
     <string name="notifications_led_color">Màu đèn LED</string>
     <string name="notifications_led_note">Đèn LED sáng khi có cuộc gọi nhỡ, trên máy có đèn.</string>
@@ -331,6 +334,7 @@
     <string name="display_swap_slider_note">Kéo sang phải để nghe, sang trái để từ chối, cho người thuận tay trái.</string>
     <string name="view_call_details">Xem chi tiết cuộc gọi</string>
     <string name="copy_number">Sao chép số</string>
+    <string name="paste_number">Dán %1$s</string>
     <string name="add_to_contacts">Thêm vào danh bạ</string>
     <string name="add_speed_dial">Thêm vào quay số nhanh</string>
     <string name="speed_dial_added">Đã thêm vào quay số nhanh</string>

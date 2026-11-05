@@ -228,6 +228,9 @@
     <string name="notifications_ringtone_sim2">SIM 2 铃声：%1$s</string>
     <string name="notifications_override">忽略情景模式音量</string>
     <string name="notifications_vibrate">振动</string>
+    <string name="notifications_vibrate_connect">接通和挂断时振动</string>
+    <string name="notifications_vibrate_connect_note">通话接通时短振一次，结束时短振两次。</string>
+    <string name="notifications_ramping_note">系统“振动与触感”设置中的“先振动再逐渐响铃”已开启：来电会先振动几秒，然后铃声从小声开始逐渐变大。</string>
     <string name="notifications_led">指示灯</string>
     <string name="notifications_led_color">指示灯颜色</string>
     <string name="notifications_led_note">有未接来电时指示灯亮起（仅限带指示灯的手机）。</string>
@@ -332,6 +335,7 @@
     <string name="display_swap_slider_note">向右拖动接听，向左拖动拒接，方便左手操作。</string>
     <string name="view_call_details">查看通话详情</string>
     <string name="copy_number">复制号码</string>
+    <string name="paste_number">粘贴 %1$s</string>
     <string name="add_to_contacts">添加到联系人</string>
     <string name="add_speed_dial">添加到快速拨号</string>
     <string name="speed_dial_added">已添加到快速拨号</string>

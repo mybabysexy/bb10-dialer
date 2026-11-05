@@ -22,6 +22,8 @@ data class PhoneSettings(
     val ringtoneSim2: String? = null,
     val overrideVolume: Boolean = false,
     val vibrate: Boolean = false,
+    /** A short buzz when a call connects, two when it ends. */
+    val vibrateOnConnect: Boolean = false,
     val led: Boolean = true,
     val ledColor: Int = 0,
     val silenceByTap: Boolean = false,
@@ -122,6 +124,7 @@ object PhoneSettingsStore {
             ringtoneSim2 = p.getString("ringtone_sim2", d.ringtoneSim2),
             overrideVolume = p.getBoolean("override", d.overrideVolume),
             vibrate = p.getBoolean("vibrate", d.vibrate),
+            vibrateOnConnect = p.getBoolean("vibrate_connect", d.vibrateOnConnect),
             led = p.getBoolean("led", d.led),
             ledColor = p.getInt("led_color", d.ledColor),
             silenceByTap = p.getBoolean("silence_tap", d.silenceByTap),
@@ -159,6 +162,7 @@ object PhoneSettingsStore {
             putString("ringtone_sim2", s.ringtoneSim2)
             putBoolean("override", s.overrideVolume)
             putBoolean("vibrate", s.vibrate)
+            putBoolean("vibrate_connect", s.vibrateOnConnect)
             putBoolean("led", s.led)
             putInt("led_color", s.ledColor)
             putBoolean("silence_tap", s.silenceByTap)

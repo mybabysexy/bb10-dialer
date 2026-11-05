@@ -125,13 +125,14 @@ class ReadmeShotsActivity : ComponentActivity() {
                     onCallMenu = {},
                     onDeleteCall = {},
                     onAllowAccess = {},
+                    onMissedSeen = {},
                 )
             }
             2 -> WithTabs(1) {
                 ContactsScreen(book, emptyList(), canReadContacts = true, refocus = 0, actions = actions, onOpenCard = {}, onContactMenu = {}, onDeleteContact = {}, onAllowAccess = {})
             }
             3 -> WithTabs(2) {
-                DialPadScreen(PUBLIC_NUMBER, {}, book, calls, listOf(1), 0, actions, {}, hasVoicemail = true, onSpeedDial = {})
+                DialPadScreen(PUBLIC_NUMBER, {}, book, calls, listOf(1), 0, actions, {}, hasVoicemail = true, onSpeedDial = {}, onPasteMenu = {})
             }
             4 -> Inset { PhoneSettingsScreen(onOpen = {}, onBack = {}) }
             5 -> IncomingCallScreen(

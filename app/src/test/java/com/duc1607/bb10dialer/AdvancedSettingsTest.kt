@@ -4,6 +4,7 @@ import android.view.KeyEvent
 import com.duc1607.bb10dialer.data.CallEntry
 import com.duc1607.bb10dialer.data.CallKind
 import com.duc1607.bb10dialer.data.freeQuickSlot
+import com.duc1607.bb10dialer.data.pastableNumber
 import com.duc1607.bb10dialer.data.contactSections
 import com.duc1607.bb10dialer.data.searchContacts
 import com.duc1607.bb10dialer.data.phoneticOf
@@ -34,6 +35,13 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AdvancedSettingsTest {
+    @Test
+    fun `only the Q25 has a speaker key`() {
+        assertEquals(KeyEvent.KEYCODE_GRAVE, PhoneModel.Q25.speakerKey)
+        assertNull(PhoneModel.P26.speakerKey)
+        assertNull(PhoneModel.Generic.speakerKey)
+    }
+
     @Test
     fun `the keys of a Q25 and a P26`() {
         assertEquals('1', PhoneModel.Q25.symbolOf(KeyEvent.KEYCODE_W))
@@ -226,5 +234,18 @@ class AdvancedSettingsTest {
         val routes = listOf(Route.Settings, Route.SpeedDial, Route.PickSpeedKey(7), Route.PickQuick(2))
         val saved = with(RouteStackSaver) { SaverScope { true }.save(routes) }!!
         assertEquals(routes, RouteStackSaver.restore(saved))
+    }
+
+    @Test
+    fun `only a clipboard of 3 to 13 digits can be pasted as a number`() {
+        assertEquals("0909123456", pastableNumber("0909123456"))
+        assertEquals("113", pastableNumber(" 113\n"))
+        assertEquals("1234567890123", pastableNumber("1234567890123"))
+        assertNull(pastableNumber("12"))
+        assertNull(pastableNumber("12345678901234"))
+        assertNull(pastableNumber("+84909123456"))
+        assertNull(pastableNumber("0909 123 456"))
+        assertNull(pastableNumber("call 0909123456"))
+        assertNull(pastableNumber(null))
     }
 }
