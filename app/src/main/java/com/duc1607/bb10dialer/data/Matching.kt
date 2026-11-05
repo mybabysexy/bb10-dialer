@@ -39,6 +39,10 @@ fun newMissedCount(calls: List<CallEntry>, seenMillis: Long): Int =
     calls.count { it.kind == CallKind.Missed && it.dateMillis > seenMillis }
 
 /** Finds the contact that owns a number. */
+/** A pasted [text] that is a phone number: 3 to 13 digits and nothing else, spaces around aside. */
+fun pastableNumber(text: CharSequence?): String? =
+    text?.toString()?.trim()?.takeIf { it.length in 3..13 && it.all { c -> c in '0'..'9' } }
+
 class ContactIndex(contacts: List<Contact>) {
     private val byKey = HashMap<String, Pair<Contact, PhoneNumber>>()
 

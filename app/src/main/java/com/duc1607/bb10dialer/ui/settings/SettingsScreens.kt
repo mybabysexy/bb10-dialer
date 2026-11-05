@@ -65,6 +65,7 @@ import com.duc1607.bb10dialer.data.ModuleState
 import com.duc1607.bb10dialer.data.PhoneModel
 import com.duc1607.bb10dialer.data.PhoneSettings
 import com.duc1607.bb10dialer.data.PhoneSettingsStore
+import com.duc1607.bb10dialer.telecom.isRampingRinger
 import com.duc1607.bb10dialer.data.REPLY_COUNT
 import com.duc1607.bb10dialer.data.RootAccess
 import com.duc1607.bb10dialer.data.RootStatus
@@ -307,6 +308,17 @@ private fun NotificationsPage(
         Bb10Toggle(settings.overrideVolume, { on -> change { it.copy(overrideVolume = on) } }, label = stringResource(R.string.notifications_override), enabled = all && settings.sound)
         Bb10Divider()
         Bb10Toggle(settings.vibrate, { on -> change { it.copy(vibrate = on) } }, label = stringResource(R.string.notifications_vibrate), enabled = all)
+        val context = LocalContext.current
+        // Read again whenever the page shows, after a trip to the system's settings.
+        val ramping = remember(settings) { isRampingRinger(context) }
+        if (ramping) SettingNote(stringResource(R.string.notifications_ramping_note))
+        Bb10Divider()
+        Bb10Toggle(
+            settings.vibrateOnConnect,
+            { on -> change { it.copy(vibrateOnConnect = on) } },
+            label = stringResource(R.string.notifications_vibrate_connect),
+        )
+        SettingNote(stringResource(R.string.notifications_vibrate_connect_note))
         Bb10Divider()
         Bb10Toggle(settings.led, { on -> change { it.copy(led = on) } }, label = stringResource(R.string.notifications_led), enabled = all)
         Bb10Divider()

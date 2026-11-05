@@ -465,6 +465,20 @@ class DialerRepository(private val context: Context) {
         resolver.delete(CallLog.Calls.CONTENT_URI, null, null)
     }
 
+    /**
+     * Marks the missed calls seen in the call log itself: what the system counts for its missed
+     * call notification, and what other apps read.
+     */
+    fun markMissedRead() {
+        val values = ContentValues().apply {
+            put(CallLog.Calls.NEW, 0)
+            put(CallLog.Calls.IS_READ, 1)
+        }
+        val unseen = "${CallLog.Calls.TYPE} = ${CallLog.Calls.MISSED_TYPE} AND " +
+            "(${CallLog.Calls.NEW} = 1 OR ${CallLog.Calls.IS_READ} = 0 OR ${CallLog.Calls.IS_READ} IS NULL)"
+        resolver.update(CallLog.Calls.CONTENT_URI, values, unseen, null)
+    }
+
     private fun phoneLabel(type: Int, label: String?): String =
         Phone.getTypeLabel(context.resources, type, label.orEmpty()).toString()
 

@@ -14,6 +14,9 @@ enum class PhoneModel {
     /** The Call key answers and calls. */
     val hasCallKey: Boolean get() = this == Q25
 
+    /** The key that turns the speaker on and off during a call, if the keyboard has one. */
+    val speakerKey: Int? get() = if (this == Q25) KeyEvent.KEYCODE_GRAVE else null
+
     /** What a letter key types on a dial pad, as the digits printed on the key. */
     fun symbolOf(keyCode: Int): Char? = when (this) {
         Generic -> null

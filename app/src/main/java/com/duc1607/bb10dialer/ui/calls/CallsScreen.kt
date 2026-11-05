@@ -136,6 +136,8 @@ fun CallsScreen(
     /** Del on a row. */
     onDeleteCall: (CallGroup) -> Unit,
     onAllowAccess: () -> Unit,
+    /** The Missed list is on screen: its calls are seen. */
+    onMissedSeen: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var filter by rememberSaveable { mutableIntStateOf(0) }
@@ -148,10 +150,13 @@ fun CallsScreen(
     val timeFormat = remember(context) { DateFormat.getTimeFormat(context) }
     // Looking at them is what makes them no longer new.
     LaunchedEffect(missedOnly, book) {
+        if (!missedOnly) return@LaunchedEffect
         val latest = book.calls.firstOrNull { it.kind == CallKind.Missed }?.dateMillis
-        if (missedOnly && latest != null && latest > missedSeenMillis) {
+        if (latest != null && latest > missedSeenMillis) {
             PhoneSettingsStore.update(context) { it.copy(missedSeenMillis = latest) }
         }
+        // Also for one that came in while the app was open, which no resume clears.
+        onMissedSeen()
     }
     val icons = rememberListIcons()
     Bb10LazyColumn(modifier.fillMaxSize().background(Bb10.colors.background), listState) {

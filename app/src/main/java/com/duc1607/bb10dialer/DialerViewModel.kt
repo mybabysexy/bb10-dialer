@@ -19,6 +19,7 @@ import com.duc1607.bb10dialer.data.ContactDraft
 import com.duc1607.bb10dialer.data.ContactPhotos
 import com.duc1607.bb10dialer.data.DialerRepository
 import com.duc1607.bb10dialer.data.QuickContacts
+import com.duc1607.bb10dialer.telecom.CallNotifications
 import com.duc1607.bb10dialer.data.SimLine
 import com.duc1607.bb10dialer.ui.calls.dayFormatter
 import com.duc1607.bb10dialer.ui.calls.title
@@ -137,6 +138,18 @@ class DialerViewModel(application: Application) : AndroidViewModel(application) 
             result.exceptionOrNull()?.let { Log.w(TAG, "Saving a contact failed", it) }
             refresh()
             onDone(result)
+        }
+    }
+
+    /**
+     * The missed calls were looked at: seen in the call log too, and their notification goes,
+     * Telecom's included, so neither comes back as if they never were.
+     */
+    fun markMissedSeen() {
+        val app = getApplication<Application>()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { runCatching { repository.markMissedRead() } }
+            CallNotifications.clearMissed(app)
         }
     }
 

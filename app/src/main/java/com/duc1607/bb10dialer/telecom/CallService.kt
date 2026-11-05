@@ -41,6 +41,8 @@ class CallService : InCallService() {
     private var inForeground = false
     private var recording = false
     private val autoRecorded = HashSet<Int>()
+    // The calls that got through, for the buzz when each one ends.
+    private val connected = HashSet<Int>()
 
     override fun onCreate() {
         super.onCreate()
@@ -124,6 +126,7 @@ class CallService : InCallService() {
 
     private fun follow(state: CallCenterState) {
         followRinging(state)
+        buzzOnConnect(state)
         val foreground = state.foreground
         // A call the user is part of opens the screen once; a ringing one is for the notification.
         if (foreground != null && opened.add(foreground.id)) {
@@ -133,6 +136,20 @@ class CallService : InCallService() {
         if (foreground != null && foreground.emergency && recording) stopRecording()
         autoRecord(foreground)
         followForeground(foreground)
+    }
+
+    /**
+     * The setting to vibrate when a call gets through, and when one that did ends. The calls of a
+     * conference count as theirs, not as the conference's.
+     */
+    private fun buzzOnConnect(state: CallCenterState) {
+        val on = PhoneSettingsStore.get(this).vibrateOnConnect
+        val live = state.calls.filter { it.phase != CallPhase.Ending && it.phase != CallPhase.Ended }.map { it.id }.toSet()
+        val ended = connected.filter { it !in live }
+        connected.removeAll(ended.toSet())
+        if (on && ended.isNotEmpty()) buzzForCall(this, connected = false)
+        val through = state.calls.filter { it.phase == CallPhase.Active && it.parentId == null && !it.conference && connected.add(it.id) }
+        if (on && through.isNotEmpty()) buzzForCall(this, connected = true)
     }
 
     /** Once for each call: one the user stopped recording stays stopped. */

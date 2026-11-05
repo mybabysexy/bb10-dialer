@@ -229,6 +229,9 @@
     <string name="notifications_ringtone_sim2">SIM 2 Ringtone: %1$s</string>
     <string name="notifications_override">Override Profile Volume</string>
     <string name="notifications_vibrate">Vibrate</string>
+    <string name="notifications_vibrate_connect">Vibrate on Connect and Disconnect</string>
+    <string name="notifications_vibrate_connect_note">One short buzz when a call is answered, two when it ends.</string>
+    <string name="notifications_ramping_note">“Vibrate first then ring gradually” is on in the system’s Vibration &amp; haptics settings: a call vibrates for a few seconds, then the ringtone starts quietly and grows louder.</string>
     <string name="notifications_led">LED</string>
     <string name="notifications_led_color">LED Color</string>
     <string name="notifications_led_note">The LED lights up for missed calls, on phones that have one.</string>
@@ -333,6 +336,7 @@
     <string name="display_swap_slider_note">Drag right to answer and left to decline, for the left hand.</string>
     <string name="view_call_details">View Call Details</string>
     <string name="copy_number">Copy Number</string>
+    <string name="paste_number">Paste %1$s</string>
     <string name="add_to_contacts">Add to Contacts</string>
     <string name="add_speed_dial">Add to Speed Dial</string>
     <string name="speed_dial_added">Added to speed dial</string>

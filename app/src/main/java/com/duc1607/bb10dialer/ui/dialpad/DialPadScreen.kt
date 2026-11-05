@@ -110,6 +110,8 @@ fun DialPadScreen(
     /** A voicemail number is set: 1 shows its mark. */
     hasVoicemail: Boolean,
     onSpeedDial: (Int) -> Unit,
+    /** Holding the number, or Menu on it: the menu offers to paste a number ([LocalBb10Menu]). */
+    onPasteMenu: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var overlayOpen by rememberSaveable { mutableStateOf(false) }
@@ -188,6 +190,7 @@ fun DialPadScreen(
                 height = if (tight) TightHeaderHeight else HeaderHeight,
                 onToggleOverlay = { overlayOpen = !overlayOpen },
                 onAddContact = { onAddContact(number) },
+                onPasteMenu = onPasteMenu,
             )
             Box(Modifier.weight(1f).fillMaxWidth()) {
                 Pad(
@@ -234,6 +237,7 @@ private fun NumberHeader(
     height: Dp,
     onToggleOverlay: () -> Unit,
     onAddContact: () -> Unit,
+    onPasteMenu: () -> Unit,
 ) {
     val c = Bb10.colors
     val d = Bb10.dimens
@@ -252,7 +256,10 @@ private fun NumberHeader(
         Column(
             Modifier
                 .weight(1f)
+                .fillMaxHeight()
+                .bb10Clickable(paintHighlight = false, onMenu = onPasteMenu, onClick = {})
                 .padding(start = d.spaceM, bottom = d.spaceS),
+            verticalArrangement = Arrangement.Bottom,
         ) {
             if (matchCount > 0) {
                 Bb10Text(

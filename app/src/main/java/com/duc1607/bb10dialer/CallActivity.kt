@@ -24,6 +24,7 @@ import com.duc1607.bb10dialer.telecom.CallPhase
 import com.duc1607.bb10dialer.telecom.placeCall
 import com.duc1607.bb10dialer.ui.call.CallHost
 import com.duc1607.bb10dialer.ui.common.dispatchCallKey
+import com.duc1607.bb10dialer.ui.common.dispatchSpeakerKey
 import com.duc1607.bb10dialer.ui.theme.DialerTheme
 import com.duc1607.bb10dialer.ui.theme.ProvideDialerScale
 import kotlinx.coroutines.delay
@@ -74,7 +75,7 @@ class CallActivity : ComponentActivity() {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean =
-        dispatchCallKey(this, event) { super.dispatchKeyEvent(it) }
+        dispatchSpeakerKey(this, event) || dispatchCallKey(this, event) { super.dispatchKeyEvent(it) }
 
     override fun onResume() {
         super.onResume()

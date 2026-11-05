@@ -13,6 +13,7 @@ import android.os.Looper
 import android.os.VibrationAttributes
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.provider.Settings
 import com.duc1607.bb10dialer.data.PhoneSettingsStore
 import com.duc1607.bb10dialer.data.ringtoneFor
 
@@ -21,9 +22,35 @@ private const val WAITING_TONE_MILLIS = 300
 private const val WAITING_TONE_VOLUME = 60
 private val VIBRATION = longArrayOf(0, 1000, 1000)
 
+// "Vibrate first then ring gradually", with the system's own timings: it vibrates for this long,
+// then the ringtone starts silent and grows to full volume over the ramp.
+private const val RAMPING_RINGER_SETTING = "apply_ramping_ringer"
+private const val RAMP_VIBRATION_MILLIS = 5000L
+private const val RAMP_MILLIS = 10000L
+private const val RAMP_STEP_MILLIS = 250L
+
+/**
+ * Whether the system's Vibration & haptics setting asks for a ring that vibrates first then grows
+ * louder. Hidden from the API, so read by its name; off when it cannot be read.
+ */
+fun isRampingRinger(context: Context): Boolean =
+    runCatching { Settings.System.getInt(context.contentResolver, RAMPING_RINGER_SETTING, 0) == 1 }.getOrDefault(false)
+
+/** A short buzz when a call connects ([connected]), two when it ends. */
+fun buzzForCall(context: Context, connected: Boolean) {
+    val pattern = if (connected) longArrayOf(0, 120) else longArrayOf(0, 90, 120, 90)
+    runCatching {
+        context.getSystemService(Vibrator::class.java).vibrate(
+            VibrationEffect.createWaveform(pattern, -1),
+            VibrationAttributes.createForUsage(VibrationAttributes.USAGE_NOTIFICATION),
+        )
+    }
+}
+
 /**
  * Rings for a call. As the phone's ringing app this one has to do it itself: Telecom stays silent.
- * Follows the ringer mode, and Do Not Disturb by way of [NotificationManager.matchesCallFilter].
+ * Follows the ringer mode, Do Not Disturb by way of [NotificationManager.matchesCallFilter], and
+ * the system's "vibrate first then ring gradually" ([isRampingRinger]).
  */
 class CallRinger(private val context: Context) {
     private var ringtone: Ringtone? = null
@@ -42,12 +69,20 @@ class CallRinger(private val context: Context) {
         if (!allowed) return
         val mode = context.getSystemService(AudioManager::class.java).ringerMode
         val chosen = custom ?: ringtoneFor(settings, slot)?.let(Uri::parse)
-        if (settings.sound && settings.overrideVolume) {
-            startRingtone(chosen, AudioAttributes.USAGE_ALARM)
-        } else if (settings.sound && mode == AudioManager.RINGER_MODE_NORMAL) {
-            startRingtone(chosen, AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+        val usage = when {
+            settings.sound && settings.overrideVolume -> AudioAttributes.USAGE_ALARM
+            settings.sound && mode == AudioManager.RINGER_MODE_NORMAL -> AudioAttributes.USAGE_NOTIFICATION_RINGTONE
+            else -> null
         }
-        if (mode == AudioManager.RINGER_MODE_VIBRATE || (mode == AudioManager.RINGER_MODE_NORMAL && settings.vibrate)) {
+        // Vibrating first is the point of the system setting: it does so even with Vibrate off here.
+        val ramp = usage != null && isRampingRinger(context)
+        if (usage != null && ramp) {
+            handler.postDelayed({ startRingtone(chosen, usage, ramp = true) }, RAMP_VIBRATION_MILLIS)
+        } else if (usage != null) {
+            startRingtone(chosen, usage)
+        }
+        val vibrate = settings.vibrate || ramp
+        if (mode == AudioManager.RINGER_MODE_VIBRATE || (mode == AudioManager.RINGER_MODE_NORMAL && vibrate)) {
             vibrator.vibrate(
                 VibrationEffect.createWaveform(VIBRATION, 0),
                 VibrationAttributes.createForUsage(VibrationAttributes.USAGE_RINGTONE),
@@ -79,7 +114,8 @@ class CallRinger(private val context: Context) {
         tone = null
     }
 
-    private fun startRingtone(custom: Uri?, usage: Int) {
+    /** With [ramp] it starts silent and grows to full volume over [RAMP_MILLIS]. */
+    private fun startRingtone(custom: Uri?, usage: Int, ramp: Boolean = false) {
         val uri = custom ?: RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE) ?: return
         ringtone = runCatching {
             RingtoneManager.getRingtone(context, uri)?.apply {
@@ -88,8 +124,22 @@ class CallRinger(private val context: Context) {
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .build()
                 isLooping = true
+                if (ramp) volume = 0f
                 play()
             }
         }.getOrNull()
+        if (ramp) rampUp(System.currentTimeMillis())
+    }
+
+    private fun rampUp(startedAt: Long) {
+        val step = object : Runnable {
+            override fun run() {
+                val playing = ringtone ?: return
+                val level = ((System.currentTimeMillis() - startedAt).toFloat() / RAMP_MILLIS).coerceIn(0f, 1f)
+                playing.volume = level
+                if (level < 1f) handler.postDelayed(this, RAMP_STEP_MILLIS)
+            }
+        }
+        handler.post(step)
     }
 }

@@ -60,6 +60,7 @@ import com.duc1607.bb10dialer.ui.calls.CallsScreen
 import com.duc1607.bb10dialer.ui.common.ActionMenu
 import com.duc1607.bb10dialer.ui.common.DialerTabBar
 import com.duc1607.bb10dialer.ui.common.MenuEntry
+import com.duc1607.bb10dialer.ui.common.clipboardNumber
 import com.duc1607.bb10dialer.ui.common.PullDownHeader
 import com.duc1607.bb10dialer.ui.common.SimHeader
 import com.duc1607.bb10dialer.ui.contacts.ContactCardScreen
@@ -140,6 +141,9 @@ fun DialerApp(
     var callMenu by remember { mutableStateOf<CallGroup?>(null) }
     // Which contact the menu is about, when it was opened by holding one.
     var contactMenu by remember { mutableStateOf<Contact?>(null) }
+    // The number on the clipboard, when the dial pad's number was held (or its menu opened) for it.
+    var pasteMenu by remember { mutableStateOf<String?>(null) }
+    var menuPaste by remember { mutableStateOf<String?>(null) }
     // An item is still held: the menu about it only peeks in, and the finger may pick an entry.
     var menuPeek by remember { mutableStateOf(false) }
     val hold = remember { Bb10MenuHold() }
@@ -183,6 +187,8 @@ fun DialerApp(
         quickMenuSlot = null
         callMenu = null
         contactMenu = null
+        pasteMenu = null
+        menuPaste = if (tab == TAB_DIAL_PAD) clipboardNumber(context) else null
         menuOpen = true
     }
 
@@ -191,8 +197,12 @@ fun DialerApp(
         quickMenuSlot = null
         callMenu = null
         contactMenu = null
+        pasteMenu = null
         pick()
     }
+
+    // Nothing to offer about what was held (a clipboard without a number): no menu at all.
+    fun hasItemMenu() = callMenu != null || quickMenuSlot != null || contactMenu != null || pasteMenu != null
 
     fun push(route: Route) {
         pages = pages + route
@@ -202,6 +212,8 @@ fun DialerApp(
         pages = pages.dropLast(1)
     }
 
+    val pasteLabel = stringResource(R.string.paste_number)
+    fun paste(number: String) = MenuEntry(pasteLabel.format(number), DialerIcons.Clipboard) { dialed = number }
     val changeLine = MenuEntry(stringResource(R.string.menu_change_line), DialerIcons.ChangeLine, enabled = false) {}
     val settings = MenuEntry(stringResource(R.string.menu_settings), DialerIcons.Settings) { push(Route.Settings) }
     val setDefault = onSetDefaultApp?.let { MenuEntry(stringResource(R.string.set_default_app), DialerIcons.Phone) { it() } }
@@ -225,7 +237,7 @@ fun DialerApp(
             changeLine,
             settings,
         )
-        else -> listOf(changeLine, settings)
+        else -> listOfNotNull(menuPaste?.let { paste(it) }, changeLine, settings)
     }
     val clipboard = LocalClipboardManager.current
     fun toast(text: Int) = Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
@@ -289,17 +301,19 @@ fun DialerApp(
             },
         )
     }
-    val itemMenuEntries = callMenuEntries ?: quickMenuEntries ?: contactMenuEntries
+    val itemMenuEntries = callMenuEntries ?: quickMenuEntries ?: contactMenuEntries ?: pasteMenu?.let { listOf(paste(it)) }
     // Holding a row peeks the menu in; letting go on one of its icons runs that entry, elsewhere
     // opens the menu fully.
     val itemMenu = remember {
         Bb10MenuController(
-            peek = { menuPeek = true },
-            open = { menuOpen = true },
+            peek = { if (hasItemMenu()) menuPeek = true },
+            open = { if (hasItemMenu()) menuOpen = true },
             move = hold::move,
             release = {
                 val picked = hold.end()
-                if (picked != null && !menuOpen) {
+                if (!menuPeek) {
+                    // Nothing peeked in: nothing to open.
+                } else if (picked != null && !menuOpen) {
                     closeMenu()
                     picked.onClick()
                 } else {
@@ -359,6 +373,7 @@ fun DialerApp(
                                             onCallMenu = { group -> pickForMenu { callMenu = group } },
                                             onDeleteCall = { confirmDeleteCall = it },
                                             onAllowAccess = onAllowAccess,
+                                            onMissedSeen = viewModel::markMissedSeen,
                                         )
                                     }
                                     TAB_CONTACTS -> ContactsScreen(
@@ -382,6 +397,7 @@ fun DialerApp(
                                         actions = actions,
                                         onAddContact = { push(Route.Editor(number = it)) },
                                         hasVoicemail = phoneSettings.voicemailNumber.isNotEmpty(),
+                                        onPasteMenu = { pickForMenu { pasteMenu = clipboardNumber(context) } },
                                         onSpeedDial = { digit ->
                                             val number = if (digit == 1) phoneSettings.voicemailNumber else state.speedKeys[digit]
                                             when {
